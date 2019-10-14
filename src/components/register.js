@@ -83,7 +83,7 @@ const Register = () => {
     <>
       <div className="p-grid p-justify-center">
         <Growl ref={el => (growl.current = el)} />
-        <div className="p-col-4">
+        <div className="p-col-12 p-md-8 p-lg-4">
           <Card
             className="p-fluid"
             style={{ padding: "1em" }}

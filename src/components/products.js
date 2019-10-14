@@ -50,7 +50,7 @@ const Products = () => {
   const itemTemplate = product => (
     <div className="p-col-4">
       <Panel header={product.name} style={{ textAlign: "center" }}>
-        <img src={yarn} alt={product.name} />
+        <img src={product.image} alt={product.name} style={{ maxWidth: '100%', height: 'auto'}}/>
         <div>{product.description}</div>
         <div>{product.price}</div>
       </Panel>
@@ -85,7 +85,7 @@ const Products = () => {
 
     return (
       <div className="p-grid">
-        <div className="p-col-2" style={{ textAlign: "left" }}>
+        <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>
           <Dropdown
             options={sortOptions}
             value={sortKey}
@@ -93,7 +93,7 @@ const Products = () => {
             onChange={onSortChange}
           />
         </div>
-        <div className="p-col-2" style={{ textAlign: "left" }}>
+        <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>
           <Dropdown
             options={categories}
             value={sortKey}
