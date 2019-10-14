@@ -52,7 +52,7 @@ const Navbar = ({ history }) => {
   ];
 
   return (
-    <div className="p-grid">
+    <div className="p-grid" style={{marginBottom: '1em'}}>
       <div className="p-col-4">
         <Link to="/">Logo</Link>
       </div>
