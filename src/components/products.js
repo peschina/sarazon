@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { DataView } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
-import allProducts from '../fakeProductService';
+import { allProducts } from "../fakeProductService";
 
 const Products = () => {
   const [products, setProducts] = useState(allProducts);
@@ -14,7 +14,11 @@ const Products = () => {
   const itemTemplate = product => (
     <Link to={`/product/${product._id}`} className="p-col-6 p-md-4 p-lg-4">
       <Panel header={product.name} style={{ textAlign: "center" }}>
-        <img src={product.image} alt={product.name} style={{ maxWidth: '100%', height: 'auto'}}/>
+        <img
+          src={product.image}
+          alt={product.name}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
         <div>{product.description}</div>
         <div>{product.price}</div>
       </Panel>
@@ -78,7 +82,7 @@ const Products = () => {
           header={renderHeader()}
           itemTemplate={itemTemplate}
           // paginatorPosition={'both'} paginator={true} rows={20}
-          // sortOrder={this.state.sortOrder} sortField={this.state.sortField}
+          // sortOrder={sortOrder} sortField={sortField}
         />
       </div>
     </div>
