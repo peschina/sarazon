@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Menubar } from "primereact/menubar";
+import { Menu } from "primereact/menu";
+import { Button } from "primereact/button";
 
 const Navbar = ({ history }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  let menuRef = useRef();
+
+  useEffect(() => {
+    window.addEventListener("resize", setIsMobile(window.innerWidth < 425));
+    return window.removeEventListener(
+      "resize",
+      setIsMobile(window.innerWidth < 425)
+    );
+  }, []);
+
   const navigateToPage = path => history.push(path);
+
   const items = [
     {
       label: "Shop",
@@ -52,13 +67,37 @@ const Navbar = ({ history }) => {
   ];
 
   return (
-    <div className="p-grid" style={{marginBottom: '1em'}}>
-      <div className="p-col-4">
-        <Link to="/">Logo</Link>
-      </div>
-      <div className="p-col-6 p-offset-2">
-        <Menubar model={items}></Menubar>
-      </div>
+    <div style={{ marginBottom: "1em" }}>
+      {isMobile ? (
+        <div
+          className="p-grid p-justify-between"
+          style={{ marginBottom: "1em" }}
+        >
+          <div className="p-col-2">
+            <Menu ref={el => (menuRef = el)} model={items} popup={true} />
+            <Button
+              type="button"
+              icon="pi pi-bars"
+              onClick={e => menuRef.toggle(e)}
+            ></Button>
+          </div>
+          <div className="p-col-5">
+            <Link to="/">Logo</Link>
+          </div>
+        </div>
+      ) : (
+        <div
+          className="p-grid p-justify-between"
+          style={{ marginBottom: "1em" }}
+        >
+          <div className="p-col">
+            <Link to="/">Logo</Link>
+          </div>
+          <div className="p-col-5">
+            <Menubar model={items}></Menubar>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
