@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { DataView } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
+import { MultiSelect } from "primereact/multiselect";
 import { allProducts } from "../fakeProductService";
 
 const Products = () => {
@@ -10,6 +11,7 @@ const Products = () => {
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(null);
   const [sortKey, setSortKey] = useState(null);
+  const [categories, setCategories] = useState(null);
 
   const itemTemplate = product => (
     <Link to={`/product/${product._id}`} className="p-col-6 p-md-4 p-lg-4">
@@ -45,7 +47,7 @@ const Products = () => {
       { label: "Price", value: "price" }
     ];
 
-    const categories = [
+    const categoriesSelectItem = [
       { label: "Books", value: "books" },
       { label: "Home & Kitchen", value: "homeKitchen" },
       { label: "Women fashion", value: "womenFashion" }
@@ -54,18 +56,19 @@ const Products = () => {
     return (
       <div className="p-grid">
         <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>
-          <Dropdown
-            options={sortOptions}
-            value={sortKey}
-            placeholder="Sort By"
-            onChange={onSortChange}
+          <MultiSelect
+            value={categories}
+            placeholder="Categories"
+            options={categoriesSelectItem}
+            filter={true}
+            onChange={e => setCategories(e.value)}
           />
         </div>
         <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>
           <Dropdown
-            options={categories}
+            options={sortOptions}
             value={sortKey}
-            placeholder="Categories"
+            placeholder="Sort By"
             onChange={onSortChange}
           />
         </div>
@@ -81,8 +84,12 @@ const Products = () => {
           layout="grid"
           header={renderHeader()}
           itemTemplate={itemTemplate}
-          // paginatorPosition={'both'} paginator={true} rows={20}
-          // sortOrder={sortOrder} sortField={sortField}
+          paginatorPosition={"both"}
+          paginator={true}
+          rows={6}
+          //first={first} onPage={(e) => setFirst(e.first)}
+          sortOrder={sortOrder}
+          sortField={sortField}
         />
       </div>
     </div>
