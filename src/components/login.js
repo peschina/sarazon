@@ -5,15 +5,17 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Growl } from "primereact/growl";
-import { showMultiple } from "./../utils";
+import { Message } from "primereact/message";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [unError, setUnError] = useState();
+  const [pwError, setPwError] = useState();
 
   const growl = useRef();
 
-  const schema = Joi.object({
+  const formSchema = Joi.object({
     username: Joi.string()
       .min(4)
       .max(50)
@@ -25,14 +27,16 @@ const Login = () => {
   });
 
   const login = () => {
-    const { error } = validate({ username, password });
+    setUnError("");
+    setPwError("");
+    const { error } = validateForm({ username, password });
     if (error) {
-      const alerts = error.details.map(i => ({
-        severity: "error",
-        summary: "Invalid input",
-        detail: i.message
-      }));
-      showMultiple(growl, alerts);
+      const alerts = error.details.map(i => {
+        i.path[0] === "username"
+          ? setUnError(i.message)
+          : setPwError(i.message);
+      });
+      return;
     }
     console.log("call to server..., redirect");
   };
@@ -41,7 +45,7 @@ const Login = () => {
     console.log("change password...");
   };
 
-  const validate = obj => schema.validate(obj, { abortEarly: false });
+  const validateForm = obj => formSchema.validate(obj, { abortEarly: false });
 
   return (
     <div className="p-grid p-justify-center">
@@ -49,17 +53,21 @@ const Login = () => {
       <Card className="p-fluid" style={{ padding: "2em" }} title="Login">
         <div className="p-col">
           <InputText
+            name="username"
             value={username}
             placeholder="Username"
             onChange={e => setUsername(e.target.value)}
           />
+          {unError && <Message severity="error" text={unError}></Message>}
         </div>
         <div className="p-col" style={{ marginBottom: "10px" }}>
           <InputText
+            name="password"
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
+          {pwError && <Message severity="error" text={pwError}></Message>}
         </div>
         <div className="p-col" style={{ marginBottom: "5px" }}>
           <Button
