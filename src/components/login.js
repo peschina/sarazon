@@ -31,7 +31,7 @@ const Login = () => {
     setPwError("");
     const { error } = validateForm({ username, password });
     if (error) {
-      const alerts = error.details.map(i => {
+      error.details.map(i => {
         i.path[0] === "username"
           ? setUnError(i.message)
           : setPwError(i.message);

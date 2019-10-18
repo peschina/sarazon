@@ -13,38 +13,38 @@ const Products = () => {
   const [sortKey, setSortKey] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const itemTemplate = product => (
-    <Link to={`/product/${product._id}`} className="p-col-6 p-md-4 p-lg-4">
-      <Panel header={product.name} style={{ textAlign: "center" }}>
+  const itemTemplate = ({ _id, name, image, description, price }) => (
+    <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
+      <Panel header={name} style={{ textAlign: "center" }}>
         <img
-          src={product.image}
-          alt={product.name}
+          src={image}
+          alt={name}
           style={{ maxWidth: "100%", height: "auto" }}
         />
-        <div>{product.description}</div>
-        <div>{product.price}</div>
+        <div>{description}</div>
+        <div>{price}</div>
       </Panel>
     </Link>
   );
 
-  const onSortChange = e => {
-    const value = e.value;
+  const onSortChange = ({ value }) => {
     if (value.indexOf("!") === 0) {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
       setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
+      return;
     }
+    setSortOrder(1);
+    setSortField(value);
+    setSortKey(value);
   };
 
   const renderHeader = () => {
     const sortOptions = [
-      { label: "Newest First", value: "!year" },
-      { label: "Oldest First", value: "year" },
-      { label: "Price", value: "price" }
+      { label: "Newest First", value: "!insertionDate" },
+      { label: "Oldest First", value: "insertionDate" },
+      { label: "Price: crescent", value: "price" },
+      { label: "Price: decrescent", value: "!price" }
     ];
 
     const categoriesSelectItem = [
@@ -87,7 +87,6 @@ const Products = () => {
           paginatorPosition={"both"}
           paginator={true}
           rows={6}
-          //first={first} onPage={(e) => setFirst(e.first)}
           sortOrder={sortOrder}
           sortField={sortField}
         />
