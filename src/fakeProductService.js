@@ -1,10 +1,20 @@
 import yarn from "./img/yarn.jpg";
 
+const placeholderText =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+  "Curabitur sollicitudin ante ligula, id euismod ligula ullamcorper sed." +
+  "Morbi finibus leo tortor," +
+  "et placerat erat bibendum at." +
+  "Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos." +
+  "Vivamus quis venenatis ipsum. " +
+  "Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis," +
+  "culpa ratione quam perferendis esse, cupiditate neque quas!";
+
 export const allProducts = [
   {
     _id: 1,
     name: "Black Top",
-    description: "nice black top",
+    description: placeholderText,
     price: "€30",
     image: yarn,
     numberInStock: 3,
@@ -14,7 +24,7 @@ export const allProducts = [
   {
     _id: 2,
     name: "White shorts",
-    description: "skinny White shorts",
+    description: placeholderText,
     price: "€45",
     image: yarn,
     numberInStock: 2,
@@ -24,7 +34,7 @@ export const allProducts = [
   {
     _id: 3,
     name: "Harry Potter and the Goblet of Fire",
-    description: "the illustrated edition",
+    description: placeholderText,
     price: "€15",
     image: yarn,
     numberInStock: 25,
@@ -34,7 +44,7 @@ export const allProducts = [
   {
     _id: 4,
     name: "The Hound of the Baskervilles",
-    description: "by Sir Arthur Conan Doyle",
+    description: placeholderText,
     price: "€7",
     image: yarn,
     numberInStock: 30,
@@ -44,7 +54,7 @@ export const allProducts = [
   {
     _id: 5,
     name: "Shaker Bottle",
-    description: "28-ounce, black",
+    description: placeholderText,
     price: "€10",
     image: yarn,
     numberInStock: 50,
@@ -54,7 +64,7 @@ export const allProducts = [
   {
     _id: 6,
     name: "Electric hot water kettle",
-    description: "stainless steel",
+    description: placeholderText,
     price: "€25",
     image: yarn,
     numberInStock: 10,
@@ -64,7 +74,7 @@ export const allProducts = [
   {
     _id: 7,
     name: "Black Top",
-    description: "nice black top",
+    description: placeholderText,
     price: "€30",
     image: yarn,
     numberInStock: 3,
@@ -73,7 +83,7 @@ export const allProducts = [
   {
     _id: 8,
     name: "White shorts",
-    description: "skinny White shorts",
+    description: placeholderText,
     price: "€45",
     image: yarn,
     numberInStock: 2,
@@ -83,7 +93,7 @@ export const allProducts = [
   {
     _id: 9,
     name: "Harry Potter and the Goblet of Fire",
-    description: "the illustrated edition",
+    description: placeholderText,
     price: "€15",
     image: yarn,
     numberInStock: 25,
@@ -93,7 +103,7 @@ export const allProducts = [
   {
     _id: 10,
     name: "The Hound of the Baskervilles",
-    description: "by Sir Arthur Conan Doyle",
+    description: placeholderText,
     price: "€7",
     image: yarn,
     numberInStock: 30,
@@ -103,7 +113,7 @@ export const allProducts = [
   {
     _id: 11,
     name: "Shaker Bottle",
-    description: "28-ounce, black",
+    description: placeholderText,
     price: "€10",
     image: yarn,
     numberInStock: 50,
@@ -113,7 +123,7 @@ export const allProducts = [
   {
     _id: 12,
     name: "Electric hot water kettle",
-    description: "stainless steel",
+    description: placeholderText,
     price: "€25",
     image: yarn,
     numberInStock: 10,
@@ -123,7 +133,7 @@ export const allProducts = [
   {
     _id: 13,
     name: "Black Top",
-    description: "nice black top",
+    description: placeholderText,
     price: "€30",
     image: yarn,
     numberInStock: 3,
@@ -133,7 +143,7 @@ export const allProducts = [
   {
     _id: 14,
     name: "White shorts",
-    description: "skinny White shorts",
+    description: placeholderText,
     price: "€45",
     image: yarn,
     numberInStock: 2,
@@ -143,7 +153,7 @@ export const allProducts = [
   {
     _id: 15,
     name: "Harry Potter and the Goblet of Fire",
-    description: "the illustrated edition",
+    description: placeholderText,
     price: "€15",
     image: yarn,
     numberInStock: 25,
@@ -153,7 +163,7 @@ export const allProducts = [
   {
     _id: 16,
     name: "The Hound of the Baskervilles",
-    description: "by Sir Arthur Conan Doyle",
+    description: placeholderText,
     price: "€7",
     image: yarn,
     numberInStock: 30,
@@ -163,7 +173,7 @@ export const allProducts = [
   {
     _id: 17,
     name: "Shaker Bottle",
-    description: "28-ounce, black",
+    description: placeholderText,
     price: "€10",
     image: yarn,
     numberInStock: 50,
@@ -173,7 +183,7 @@ export const allProducts = [
   {
     _id: 18,
     name: "Electric hot water kettle",
-    description: "stainless steel",
+    description: placeholderText,
     price: "€25",
     image: yarn,
     numberInStock: 10,
