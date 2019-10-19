@@ -3,57 +3,60 @@ import { Rating } from "primereact/rating";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { Fieldset } from "primereact/fieldset";
 import { getProduct } from "../fakeProductService";
+import "../app.css";
 
-const productPage = props => {
-  // const [stars, setStars] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+const ProductPage = props => {
+  const [stars, setStars] = useState(0);
+  const [selectedQuantity, setSelectedQuantity] = useState(0);
 
   const id = props.match.params.id;
-  const { image, name, description, price } = getProduct(id);
+  const { image, name, description, price, numberInStock } = getProduct(id);
+  const quantities = [];
 
-  const quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  for (let i = 1; i <= numberInStock; i++) {
+    quantities.push({ label: `${i}`, value: i });
+  }
 
-  const handleAddToCart = () => {
-    console.log("Add product to cart");
-  };
+  const handleAddToCart = () => console.log("Add product to cart");
+
+  const renderCard = (content, title) => (
+    <Card
+      title={title}
+      className="p-grid p-justify-center"
+      style={{ boxShadow: "unset" }}
+    >
+      {content}
+    </Card>
+  );
 
   return (
-    <div className="p-grid" style={{ padding: "1em" }}>
-      <div className="p-col-5">
-        <img src={image} alt={name} />
+    <div className="p-grid p-justify-center" style={{ padding: "1em" }}>
+      <div className="p-col-12 p-md-6">
+        {renderCard(<img src={image} alt={name} />)}
       </div>
-      <div className="p-col-5">
-        <div className="p-grid">
-          <div className="p-col-12 p-card-title">
-            {name}
-            {/* <Rating
-              value={stars}
-              cancel={false}
-              onChange={e => setStars(e.value)}
-            /> */}
-          </div>
-          <hr></hr>
-          <div className="p-col-12 ">{price}</div>
-          <hr></hr>
-          <div className="p-col-12">{description}</div>
-        </div>
-      </div>
-      <div className="p-col-2">
-        <div className="p-grid p-justify-center">
-          <Card>
+      <div className="p-col-12 p-md-6">
+        {renderCard(
+          <>
             <div className="p-col">
-              <span>{price}</span>
+              <Rating
+                value={stars}
+                cancel={false}
+                onChange={e => setStars(e.value)}
+              />
             </div>
-            <div className="p-col">
-              <span>In stock?</span>
+            <hr></hr>
+            <div className="p-col" style={{ fontWeight: "bold" }}>
+              {price}
             </div>
+            <div className="p-col">{numberInStock} in stock</div>
             <div className="p-col">
-              <span>Choose quantity</span>
               <Dropdown
+                value={selectedQuantity}
                 options={quantities}
-                placeholder={1}
-                onChange={e => setQuantity(e.value)}
+                placeholder={"1"}
+                onChange={e => setSelectedQuantity(e.value)}
               ></Dropdown>
             </div>
             <div className="p-col">
@@ -63,11 +66,20 @@ const productPage = props => {
                 onClick={handleAddToCart}
               ></Button>
             </div>
-          </Card>
-        </div>
+          </>,
+          name
+        )}
+      </div>
+      <div className="p-col-12 p-md-offset-1 p-md-10">
+        <Fieldset legend="Product description" toggleable={true}>
+          <div className="p-col-12 p-md-offset-1 p-md-10">{description}</div>
+        </Fieldset>
+        <Fieldset legend="Delivery options and conditions" toggleable={true}>
+          <div className="p-col-12 p-md-offset-1 p-md-10">{description}</div>
+        </Fieldset>
       </div>
     </div>
   );
 };
 
-export default productPage;
+export default ProductPage;
