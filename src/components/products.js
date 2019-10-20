@@ -1,19 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { DataView } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
 import { MultiSelect } from "primereact/multiselect";
-import { allProducts } from "../fakeProductService";
+import { allProducts, filterByCategory } from "../fakeProductService";
 
 const Products = () => {
   const [products, setProducts] = useState(allProducts);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(null);
   const [sortKey, setSortKey] = useState(null);
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState([]);
 
-  const itemTemplate = ({ _id, name, image, description, price }) => (
+  const filter = useCallback(() => setProducts(filterByCategory(categories)), [
+    categories
+  ]);
+
+  function useDidUpdateEffect(fn, dependency) {
+    const didMountRef = useRef(false);
+
+    useEffect(() => {
+      if (!didMountRef.current) {
+        didMountRef.current = true;
+        return;
+      }
+      fn();
+    }, [dependency, fn]);
+  }
+
+  useDidUpdateEffect(filter, categories);
+
+  const itemTemplate = ({ _id, name, image, price }) => (
     <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
       <Panel header={name} style={{ textAlign: "center" }}>
         <img
@@ -21,7 +39,6 @@ const Products = () => {
           alt={name}
           style={{ maxWidth: "100%", height: "auto" }}
         />
-        <div>{description}</div>
         <div>{price}</div>
       </Panel>
     </Link>
@@ -39,6 +56,8 @@ const Products = () => {
     setSortKey(value);
   };
 
+  const onFilterChange = ({ value }) => setCategories(value);
+
   const renderHeader = () => {
     const sortOptions = [
       { label: "Newest First", value: "!insertionDate" },
@@ -48,9 +67,9 @@ const Products = () => {
     ];
 
     const categoriesSelectItem = [
-      { label: "Books", value: "books" },
-      { label: "Home & Kitchen", value: "homeKitchen" },
-      { label: "Women fashion", value: "womenFashion" }
+      { label: "Books", value: "Books" },
+      { label: "Home & Kitchen", value: "Home & Kitchen" },
+      { label: "Women fashion", value: "Women fashion" }
     ];
 
     return (
@@ -60,8 +79,7 @@ const Products = () => {
             value={categories}
             placeholder="Categories"
             options={categoriesSelectItem}
-            filter={true}
-            onChange={e => setCategories(e.value)}
+            onChange={onFilterChange}
           />
         </div>
         <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>

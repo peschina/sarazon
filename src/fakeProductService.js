@@ -194,3 +194,13 @@ export const allProducts = [
 
 export const getProduct = id =>
   allProducts.filter(p => p._id === parseInt(id))[0];
+
+export const filterByCategory = cat => {
+  if (cat.length === 0) return allProducts;
+  let products = [];
+  cat.forEach(c => {
+    const array = allProducts.filter(p => p.category === c);
+    products.push(...array);
+  });
+  return products;
+};
