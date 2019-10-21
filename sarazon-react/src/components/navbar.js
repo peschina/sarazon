@@ -59,7 +59,7 @@ const Navbar = ({ history }) => {
       ]
     },
     {
-      label: "About"
+      label: "About us"
     },
     {
       label: "Contacts"
