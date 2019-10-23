@@ -1,7 +1,17 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const auth = require("../middleware/auth");
 const { User, validateUser, validatePassword } = require("../models/user");
+
+router.get("/me", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.send(user);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 router.post("/", async (req, res) => {
   const { error: pwError } = validatePassword(req.body.password);
