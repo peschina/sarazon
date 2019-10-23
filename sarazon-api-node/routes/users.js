@@ -11,16 +11,19 @@ router.post("/", async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
     if (user) return res.status(400).send("Invalid email or password");
-
+    const { username, email, password } = req.body;
     user = new User({
-      name: req.body.name,
+      username: req.body.username,
       email: req.body.email,
       password: req.body.password
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(req.body.password, salt);
     await user.save();
-    res.send(user);
+    const token = user.generateAuthToken();
+    res
+      .header("x-auth-token", token)
+      .send({ _id: user._id, username: username, email: email });
   } catch (err) {
     res.status(500).send(err.message);
   }

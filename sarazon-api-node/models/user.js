@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const Joi = require("@hapi/joi");
 const PasswordComplexity = require("joi-password-complexity");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
     minlength: 4,
@@ -24,13 +26,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 8
-  }
+  },
+  isAdmin: Boolean
 });
+
+userSchema.methods.generateAuthToken = function() {
+  return jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get("jwtPrivateKey")
+  );
+};
 
 const User = mongoose.model("User", userSchema);
 
 const joiUserSchema = Joi.object({
-  name: Joi.string()
+  username: Joi.string()
     .min(4)
     .max(50)
     .required(),
@@ -39,7 +49,7 @@ const joiUserSchema = Joi.object({
     .min(5)
     .max(200)
     .required(),
-  // password will be validated with password-complexity package before
+  // password will be validated with password-complexity package first
   password: Joi.string().required()
 });
 
