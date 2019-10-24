@@ -1,9 +1,13 @@
+const winston = require("winston");
+require("winston-mongodb");
+require("express-async-errors");
 const config = require("config");
 const express = require("express");
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const app = express();
+const error = require("./middleware/error");
 const products = require("./routes/products");
 const categories = require("./routes/categories");
 const users = require("./routes/users");
@@ -11,6 +15,23 @@ const auth = require("./routes/auth");
 
 mongoose.set("useCreateIndex", true);
 mongoose.set("useFindAndModify", false);
+
+process.on("unhandledRejection", ex => {
+  throw ex;
+});
+
+winston.add(
+  new winston.transports.File({
+    filename: "logfile.log",
+    handleExceptions: true
+  })
+);
+winston.add(
+  new winston.transports.MongoDB({
+    db: "mongodb://localhost/sarazon",
+    level: "info"
+  })
+);
 
 if (!config.get("jwtPrivateKey")) {
   console.log("FATAL ERROR: jwtPrivateKey is not defined");
@@ -31,6 +52,7 @@ app.use("/api/products", products);
 app.use("/api/categories", categories);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+app.use(error);
 
 app.get("/", (req, res) => res.send("This is sarazon homepage"));
 
