@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const { Product, validate } = require("../models/product");
 const { Category } = require("../models/category");
 
@@ -90,7 +92,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   try {
     const product = await Product.findByIdAndRemove(req.params.id);
     if (!product) return res.status(404).send("Product not found");
