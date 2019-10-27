@@ -1,11 +1,11 @@
-import React, { useState, useRef } from "react";
-import Joi from "@hapi/joi";
+import React, { useState, useRef, useEffect } from "react";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Growl } from "primereact/growl";
-import { showMultiple } from "../utils";
+import { Message } from "primereact/message";
+import validate from "../validation/registerForm";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -13,28 +13,27 @@ const Register = () => {
   const [c_email, setC_email] = useState("");
   const [password, setPassword] = useState("");
   const [c_password, setC_password] = useState("");
+  const [errors, setErrors] = useState({});
 
   const growl = useRef();
 
-  const schema = Joi.object({
-    username: Joi.string()
-      .min(2)
-      .max(200)
-      .required(),
-    email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-      .required(),
-    c_email: Joi.ref("email"),
-    password: Joi.string()
-      .min(5)
-      .max(12)
-      .required(),
-    c_password: Joi.ref("password")
-  });
+  const errorsRef = useRef(errors);
 
-  const validate = obj => schema.validate(obj, { abortEarly: false });
+  useEffect(() => {
+    errorsRef.current = errors;
+  }, [errors]);
+
+  const {
+    username: usErr,
+    email: emErr,
+    c_email: c_emErr,
+    password: pwErr,
+    c_password: c_pwErr
+  } = errors;
 
   const save = () => {
+    setErrors({});
+
     const { error } = validate({
       username,
       email,
@@ -43,39 +42,30 @@ const Register = () => {
       c_password
     });
     if (error) {
-      const alerts = error.details.map(i => ({
-        severity: "error",
-        summary: "Invalid input",
-        detail: i.message
-      }));
-      showMultiple(growl, alerts);
+      let errs = { ...errorsRef };
+      error.details.map(i => (errs[i.path[0]] = i.message));
+      setErrors(errs);
     }
     console.log("save data...");
   };
 
-  const renderInputText = (label, value, handleChange) => (
+  const renderInputText = (label, value, error, handleChange) => (
     <div className={"p-col-12"}>
-      <span className="p-float-label">
-        <InputText
-          id={label}
-          value={value}
-          onChange={e => handleChange(e.target.value)}
-        />
-        <label htmlFor={label}>{label}</label>
-      </span>
+      <InputText
+        placeholder={label}
+        onChange={e => handleChange(e.target.value)}
+      />
+      {error && <Message severity="error" text={error}></Message>}
     </div>
   );
 
-  const renderInputPassword = (label, value, handleChange) => (
+  const renderInputPassword = (label, value, error, handleChange) => (
     <div className={"p-col-12"}>
-      <span className="p-float-label">
-        <Password
-          id={label}
-          value={value}
-          onChange={e => handleChange(e.target.value)}
-        />
-        <label htmlFor={label}>{label}</label>
-      </span>
+      <Password
+        placeholder={label}
+        onChange={e => handleChange(e.target.value)}
+      />
+      {error && <Message severity="error" text={error}></Message>}
     </div>
   );
 
@@ -90,13 +80,14 @@ const Register = () => {
             title="Create an account"
           >
             <div className="p-grid p-justify-center">
-              {renderInputText("Username", username, setUsername)}
-              {renderInputText("Email", email, setEmail)}
-              {renderInputText("Confirm Email", c_email, setC_email)}
-              {renderInputPassword("Password", password, setPassword)}
+              {renderInputText("Username", username, usErr, setUsername)}
+              {renderInputText("Email", email, emErr, setEmail)}
+              {renderInputText("Confirm Email", c_email, c_emErr, setC_email)}
+              {renderInputPassword("Password", password, pwErr, setPassword)}
               {renderInputPassword(
                 "Confirm Password",
                 c_password,
+                c_pwErr,
                 setC_password
               )}
               <div className="p-col">
