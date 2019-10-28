@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Joi from "@hapi/joi";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
+import validate from "../validation/loginForm";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -15,21 +15,10 @@ const Login = () => {
 
   const growl = useRef();
 
-  const formSchema = Joi.object({
-    username: Joi.string()
-      .min(4)
-      .max(50)
-      .required(),
-    password: Joi.string()
-      .min(5)
-      .max(12)
-      .required()
-  });
-
   const login = () => {
     setUnError("");
     setPwError("");
-    const { error } = validateForm({ username, password });
+    const { error } = validate({ username, password });
     if (error) {
       error.details.map(i => {
         i.path[0] === "username"
@@ -44,8 +33,6 @@ const Login = () => {
   const changePassword = () => {
     console.log("change password...");
   };
-
-  const validateForm = obj => formSchema.validate(obj, { abortEarly: false });
 
   return (
     <div className="p-grid p-justify-center">
