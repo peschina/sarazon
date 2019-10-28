@@ -7,6 +7,7 @@ import NotFound from "./components/notFound";
 import Products from "./components/products";
 import ProductPage from "./components/productPage";
 import Register from "./components/register";
+import Cart from "./components/cart";
 
 const App = ({ history }) => {
   return (
@@ -16,6 +17,7 @@ const App = ({ history }) => {
         <Switch>
           <Route path="/product/:id" component={ProductPage} />
           <Route path="/products" component={Products} />
+          <Route path="/cart" component={Cart} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/not-found" component={NotFound} />
