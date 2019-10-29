@@ -37,7 +37,8 @@ const Navbar = ({ history }) => {
           command: () => navigateToPage("/login")
         },
         {
-          label: "Profile"
+          label: "Profile",
+          command: () => navigateToPage("/profile")
         },
         {
           label: "Orders"

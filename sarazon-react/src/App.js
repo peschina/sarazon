@@ -7,6 +7,7 @@ import NotFound from "./components/notFound";
 import Products from "./components/products";
 import ProductPage from "./components/productPage";
 import Register from "./components/register";
+import Profile from "./components/profile";
 import Cart from "./components/cart";
 
 const App = ({ history }) => {
@@ -20,6 +21,7 @@ const App = ({ history }) => {
           <Route path="/cart" component={Cart} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/profile" component={Profile} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={Home} />
           <Redirect to="/not-found" />
