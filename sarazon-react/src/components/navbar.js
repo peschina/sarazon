@@ -22,18 +22,11 @@ const Navbar = ({ history }) => {
   const items = [
     {
       label: "Shop",
-      items: [
-        {
-          label: "Products",
-          command: () => navigateToPage("/products")
-        },
-        {
-          label: "Sales"
-        }
-      ]
+      command: () => navigateToPage("/products")
     },
     {
       label: "Cart",
+      command: () => navigateToPage("/cart"),
       icon: "pi pi-shopping-cart"
     },
     {
