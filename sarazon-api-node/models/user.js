@@ -59,5 +59,4 @@ const validateUser = user => joiUserSchema.validate(user);
 exports.User = User;
 exports.validateUser = validateUser;
 exports.validatePassword = validatePassword;
-exports.joiUserSchema = joiUserSchema;
 exports.userSchema = userSchema;
