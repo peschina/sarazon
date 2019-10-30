@@ -36,16 +36,9 @@ const cartSchema = new mongoose.Schema({
 const Cart = mongoose.model("Cart", cartSchema);
 
 const joiCartSchema = Joi.object({
-  userId: Joi.objectId().required(),
-  products: Joi.array()
-    .items(
-      Joi.object({
-        _id: Joi.objectId().required(),
-        selectedQuantity: Joi.number()
-          .min(1)
-          .required()
-      })
-    )
+  _id: Joi.objectId().required(),
+  selectedQuantity: Joi.number()
+    .min(1)
     .required()
 });
 
