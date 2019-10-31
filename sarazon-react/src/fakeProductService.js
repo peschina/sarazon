@@ -192,6 +192,66 @@ export const allProducts = [
   }
 ];
 
+export const cartProducts = [
+  {
+    _id: 1,
+    name: "Black Top",
+    price: "30",
+    image: yarn,
+    numberInStock: 3,
+    selectedQuantity: 1
+  },
+  {
+    _id: 2,
+    name: "White shorts",
+    price: "45",
+    image: yarn,
+    numberInStock: 2,
+    selectedQuantity: 1
+  },
+  {
+    _id: 3,
+    name: "Harry Potter and the Goblet of Fire",
+    price: "15",
+    image: yarn,
+    numberInStock: 25,
+    selectedQuantity: 2
+  }
+];
+
+export const categories = [
+  {
+    _id: 1,
+    name: "Books",
+    image: yarn
+  },
+  {
+    _id: 2,
+    name: "Home & Kitchen",
+    image: yarn
+  },
+  {
+    _id: 3,
+    name: "Women fashion",
+    image: yarn
+  },
+  {
+    _id: 4,
+    name: "Electronics",
+    image: yarn
+  },
+  {
+    _id: 5,
+    name: "DIY",
+    image: yarn
+  },
+  {
+    _id: 6,
+    name: "Toys",
+    image: yarn
+  }
+];
+
 export const getProduct = id =>
   allProducts.filter(p => p._id === parseInt(id))[0];
 
