@@ -16,40 +16,39 @@ router.get("/: id", async (req, res) => {
   res.send(cart);
 });
 
-router.post(
-  "/",
-  // [auth],
-  async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    const user = await User.findById(req.body.userId);
-    if (!user) return res.status(400).send("Invalid user");
-    // CHECK IF USER ALREADY HAS A CART
-    // PRODUCTS IS AN ARRAY OF PRODUCTS ID
-    const productsArray = req.body.products.map(async p => {
-      let product = await Product.findById(p._id);
-      return {
-        _id: product._id,
-        name: product.name,
-        price: product.price,
-        numberInStock: product.numberInStock,
-        selectedQuantity: p.selectedQuantity
-      };
-    });
+router.post("/", [auth], async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    const cart = new Cart({
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        password: user.password
-      },
-      products: productsArray
-    });
-    console.log(cart);
-    await cart.save();
-    res.send(cart);
-  }
-);
+  const token = req.header("x-auth-token");
+  const userId = jwt.decode(token);
+  const user = await User.findById(userId);
+  if (!user) return res.status(400).send("Invalid user");
+
+  const prevCart = await Cart.findOne({ user: user });
+  if (prevCart) return res.status(400).send("User already has a cart");
+
+  const product = await Product.findById(req.body._id);
+  const cartProduct = {
+    _id: product._id,
+    name: product.name,
+    price: product.price,
+    numberInStock: product.numberInStock,
+    selectedQuantity: req.body.selectedQuantity
+  };
+
+  const cart = new Cart({
+    user: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      password: user.password
+    },
+    products: [cartProduct]
+  });
+  await cart.save();
+  res.send(cart);
+});
+
 
 module.exports = router;
