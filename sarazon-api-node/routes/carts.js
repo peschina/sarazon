@@ -91,4 +91,10 @@ router.put("/:id", [auth], async (req, res) => {
   );
 });
 
+router.delete("/:id", [auth], async (req, res) => {
+  const cart = await Cart.findByIdAndRemove(req.params.id);
+  if (!cart) return res.status(404).send("Cart not found");
+  res.send(cart);
+});
+
 module.exports = router;
