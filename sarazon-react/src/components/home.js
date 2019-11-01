@@ -1,11 +1,61 @@
-import React from 'react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Carousel } from "primereact/carousel";
+import { categories as allCategories } from "../fakeProductService";
 
 const Home = () => {
-	return(
-		<>
-		  {'homepage'}
-		</>
-	);
-}
+  const [categories, setCategories] = useState(allCategories);
+
+  const responsiveSettings = [
+    {
+      breakpoint: "1024px",
+      numVisible: 3,
+      numScroll: 3
+    },
+    {
+      breakpoint: "768px",
+      numVisible: 2,
+      numScroll: 2
+    },
+    {
+      breakpoint: "560px",
+      numVisible: 1,
+      numScroll: 1
+    }
+  ];
+
+  const itemTemplate = ({ _id, name, image }) => (
+    // PASS PARAMS SO THAT PRODUCTS ARE ALREADY FILTER BY CATEGORY
+    <Link to="/products" className="p-grid p-nogutter">
+      <div className="p-col-12">
+        <div style={{ fontWeight: "bold", textAlign: "center" }}>{name}</div>
+      </div>
+      <div className="p-col-12">
+        <img
+          src={image}
+          alt={name}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </div>
+    </Link>
+  );
+
+  const customHeader = (
+    <h2 style={{ textAlign: "center" }}>Explore by category</h2>
+  );
+
+  return (
+    <Carousel
+      value={categories}
+      itemTemplate={itemTemplate}
+      numVisible={3}
+      numScroll={1}
+      responsive={responsiveSettings}
+      header={customHeader}
+      circular={true}
+      autoplayInterval={3000}
+    ></Carousel>
+  );
+};
 
 export default Home;
