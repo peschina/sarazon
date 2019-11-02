@@ -44,7 +44,8 @@ const Navbar = ({ history }) => {
           label: "Orders"
         },
         {
-          label: "Wishlist"
+          label: "Wishlist",
+          command: () => navigateToPage("/wishlist")
         },
         {
           label: "Logout",
