@@ -20,7 +20,7 @@ const Login = () => {
     setPwError("");
     const { error } = validate({ username, password });
     if (error) {
-      error.details.map(i => {
+      error.details.forEach(i => {
         i.path[0] === "username"
           ? setUnError(i.message)
           : setPwError(i.message);

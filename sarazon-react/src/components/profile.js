@@ -6,7 +6,8 @@ import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
-import Joi from '@hapi/joi';
+import { validateInput } from "../validation/profileForm";
+import { showMessage } from "./../utils";
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -15,7 +16,6 @@ const Profile = () => {
     phone: "3881775564",
     password: "********"
   });
-
   const [input, setInput] = useState("");
   const [c_input, setC_Input] = useState("");
   const [dialog, setDialog] = useState({
@@ -41,51 +41,32 @@ const Profile = () => {
   useEffect(() => {
     dialogRef.current = dialog;
   }, [dialog]);
-	
+
   useEffect(() => {
     setErrors({});
-	setInput('');
-	setC_Input('');	
+    setInput("");
+    setC_Input("");
   }, [dialog]);
-  
-  const validate = (schema, obj) => schema.validate(obj);
-  
-  const schema = {
-	  username: Joi.string().min(2).max(200).required(),
-	  email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
-	  c_email: Joi.any().valid(input),
-	  password: Joi.string().min(5).max(12).required(),
-	  c_password: Joi.any().valid(input).required()
-  }
-  
-  const validateInput = (path, input) => {
-  	const { error } = validate(schema[path], input);
-	if (error) {
-	  let errs = { ...errorsRef.current };
-	  errs[path] = error.details[0].message;
-	  setErrors(errs);
-	}
-	return error;
-  };
-  
+
   const handleSave = value => {
     setErrors({});
-	  
-	let error = validateInput(value, input);
-	if (error) return;
-	if (value === "email") error = validateInput("c_email", c_input);  
-	if (value === "password") error = validateInput("c_password", c_input);
-	if (error) return;
+    let error = validateInput(value, input, errorsRef, setErrors, input);
+    if (value === "email")
+      error = validateInput("c_email", c_input, errorsRef, setErrors, input);
+    if (value === "password")
+      error = validateInput("c_password", c_input, errorsRef, setErrors, input);
+    if (error) return;
 
-	let user = {...userRef.current};
-	user[value] = input;
-	setUser(user);
-	// save changes in db
+    let user = { ...userRef.current };
+    user[value] = input;
+    setUser(user);
+    // save changes in db
     // if put is successful display alert
-    handleShow(value);
+    showMessage(growl, "success", `${value} updated successfully`);
+    handleToggleDialog(value);
   };
 
-  const handleShow = value => {
+  const handleToggleDialog = value => {
     let dialog = { ...dialogRef.current };
     dialog[value] = !dialog[value];
     setDialog(dialog);
@@ -104,7 +85,7 @@ const Profile = () => {
         <div className="p-col-3">
           <Button
             label="Edit"
-            onClick={() => handleShow(label.toLowerCase())}
+            onClick={() => handleToggleDialog(label.toLowerCase())}
           ></Button>
         </div>
       </div>
@@ -116,7 +97,7 @@ const Profile = () => {
       header={`Edit your ${label}`}
       visible={dialog[label]}
       modal={true}
-      onHide={() => handleShow(label)}
+      onHide={() => handleToggleDialog(label)}
     >
       <div className="p-col">
         <span>
@@ -126,26 +107,45 @@ const Profile = () => {
         </span>
       </div>
       <div className="p-col">
-        <label style={{ fontWeight: 'bold' }}>{`New ${label}`}</label>
+        <label style={{ fontWeight: "bold" }}>{`New ${label}`}</label>
       </div>
       <div className="p-col">
-        {label !== "password" ? <InputText value={input} onChange={e => setInput(e.target.value)} /> :
-        <Password value={input} onChange={e => setInput(e.target.value)} />}
-		{errors[label] && <Message severity="error" text={errors[label]}></Message>}
+        {label !== "password" ? (
+          <InputText value={input} onChange={e => setInput(e.target.value)} />
+        ) : (
+          <Password value={input} onChange={e => setInput(e.target.value)} />
+        )}
+        {errors[label] && (
+          <Message severity="error" text={errors[label]}></Message>
+        )}
       </div>
-        {label !== "username" && (
-		  <>
-			  <div className="p-col">
-		        <label style={{ fontWeight: 'bold' }}>{`Confirm ${label}`}</label>
-		      </div>
-		      <div className="p-col">
-		        {label === "email" ? <InputText value={c_input} onChange={e => setC_Input(e.target.value)} /> : 
-				<Password value={c_input} onChange={e => setC_Input(e.target.value)} />}
-		        {label === "email" ? errors.c_email && <Message severity="error" text={errors.c_email}></Message> :
-				errors.c_password && <Message severity="error" text={errors.c_password}></Message>}
-		      </div>
-		  </>
-			)}
+      {label !== "username" && (
+        <>
+          <div className="p-col">
+            <label style={{ fontWeight: "bold" }}>{`Confirm ${label}`}</label>
+          </div>
+          <div className="p-col">
+            {label === "email" ? (
+              <InputText
+                value={c_input}
+                onChange={e => setC_Input(e.target.value)}
+              />
+            ) : (
+              <Password
+                value={c_input}
+                onChange={e => setC_Input(e.target.value)}
+              />
+            )}
+            {label === "email"
+              ? errors.c_email && (
+                  <Message severity="error" text={errors.c_email}></Message>
+                )
+              : errors.c_password && (
+                  <Message severity="error" text={errors.c_password}></Message>
+                )}
+          </div>
+        </>
+      )}
       <div className="p-col">
         <Button label="Save" onClick={() => handleSave(label)} />
       </div>
@@ -154,6 +154,7 @@ const Profile = () => {
 
   return (
     <div className="p-grid p-justify-center">
+      <Growl ref={el => (growl.current = el)} />
       <div className="p-col-12 p-md-6 p-lg-4">
         {renderCard("Username", user.username)}
         {renderCard("Email", user.email)}

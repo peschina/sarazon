@@ -43,8 +43,8 @@ const Cart = () => {
     }
 
     return (
-      <Card className="p-col-12">
-        <div className="p-grid">
+      <Card className="p-col-12" key={_id}>
+        <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
             <img
               src={image}
@@ -76,10 +76,9 @@ const Cart = () => {
                   onClick={() => handleRemove(_id)}
                 ></Button>
               </div>
-              <div className="p-col-6 p-col-md-4">
+              <div className="p-col p-col-md-4">
                 <Button
                   label="Move to wishlist"
-                  icon="pi pi-trash"
                   onClick={() => handleMove(_id)}
                 ></Button>
               </div>
@@ -99,11 +98,32 @@ const Cart = () => {
     return amount;
   };
 
+  const footer = (
+    <div className="p-grid p-col-12">
+      <div className="p-col-11" style={{ textAlign: "left" }}>
+        {"Total"}
+      </div>
+      <div
+        className="p-col-1"
+        style={{ textAlign: "right", fontWeight: "bold" }}
+      >
+        €{totalAmount()}
+      </div>
+    </div>
+  );
+
   return (
     <div className="p-grid p-justify-center">
-      <div className="p-col-12 p-md-10 p-lg-8">
+      <Card
+        footer={footer}
+        className="p-col-12 p-md-10 p-lg-8"
+        style={{ boxShadow: "unset" }}
+      >
         <div className="p-grid p-col-12">
-          <div className="p-col-11" style={{ textAlign: "left" }}>
+          <div
+            className="p-col-11"
+            style={{ textAlign: "left", fontWeight: "bold" }}
+          >
             {"Cart"}
           </div>
           <div className="p-col-1" style={{ textAlign: "right" }}>
@@ -111,18 +131,7 @@ const Cart = () => {
           </div>
         </div>
         {products.map(p => itemTemplate(p))}
-        <div className="p-grid p-col-12">
-          <div className="p-col-11" style={{ textAlign: "left" }}>
-            {"Total"}
-          </div>
-          <div
-            className="p-col-1"
-            style={{ textAlign: "right", fontWeight: "bold" }}
-          >
-            €{totalAmount()}
-          </div>
-        </div>
-      </div>
+      </Card>
     </div>
   );
 };
