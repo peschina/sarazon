@@ -6,7 +6,7 @@ import { Panel } from "primereact/panel";
 import { MultiSelect } from "primereact/multiselect";
 import { allProducts, filterByCategory } from "../fakeProductService";
 
-const Products = () => {
+const Products = props => {
   const [products, setProducts] = useState(allProducts);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(null);
@@ -28,6 +28,10 @@ const Products = () => {
       fn();
     }, [dependency, fn]);
   }
+
+  useEffect(() => {
+    if (props.location.state) setCategories(props.location.state.category);
+  }, [props.location.state]);
 
   useDidUpdateEffect(filter, categories);
 

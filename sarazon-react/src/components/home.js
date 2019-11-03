@@ -25,8 +25,10 @@ const Home = () => {
   ];
 
   const itemTemplate = ({ _id, name, image }) => (
-    // PASS PARAMS SO THAT PRODUCTS ARE ALREADY FILTER BY CATEGORY
-    <Link to="/products" className="p-grid p-nogutter">
+    <Link
+      to={{ pathname: "/products", state: { category: [name] } }}
+      className="p-grid p-nogutter"
+    >
       <div className="p-col-12">
         <div style={{ fontWeight: "bold", textAlign: "center" }}>{name}</div>
       </div>
