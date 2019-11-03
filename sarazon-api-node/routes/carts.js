@@ -22,15 +22,18 @@ router.put("/", [auth], async (req, res) => {
   const userId = jwt.decode(token);
   const user = await User.findById(userId);
 
-  const product = await Product.findById(req.body._id);
+  const { _id: productId, selectedQuantity } = req.body;
+  const product = await Product.findById(productId);
+  if (!product) return res.status(404).send("Product not found");
+  const { _id, name, price, numberInStock } = product;
   let cartProducts = user.cart.filter(p => !p._id.equals(product._id));
-  if (req.body.selectedQuantity !== 0) {
+  if (selectedQuantity !== 0) {
     const cartProduct = {
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      numberInStock: product.numberInStock,
-      selectedQuantity: req.body.selectedQuantity
+      _id: _id,
+      name: name,
+      price: price,
+      numberInStock: numberInStock,
+      selectedQuantity: selectedQuantity
     };
     cartProducts = [...cartProducts, cartProduct];
   }
