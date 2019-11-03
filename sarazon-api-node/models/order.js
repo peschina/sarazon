@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
-const { productSchema, joiProductSchema } = require("./product");
+const { productSchema } = require("./product");
 
 const orderSchema = new mongoose.Schema({
   creationDate: {
@@ -23,13 +23,11 @@ const orderSchema = new mongoose.Schema({
 });
 
 const joiOrderSchema = Joi.object({
-  creationDate: Joi.date().required(),
   products: Joi.array()
-    .items(joiProductSchema)
+    .items(Joi.objectId().required())
     .required(),
   deliveryAddress: Joi.string().required(),
-  billingAddress: Joi.string().required(),
-  totalAmount: Joi.number().required()
+  billingAddress: Joi.string().required()
 });
 
 const validateOrder = order => joiOrderSchema.validate(order);
