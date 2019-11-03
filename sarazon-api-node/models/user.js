@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("@hapi/joi");
 const PasswordComplexity = require("joi-password-complexity");
+const { orderSchema } = require("./order");
+const { wishlistProductSchema } = require("./wishlist");
+const { cartProductSchema } = require("./cart");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -27,7 +30,25 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 8
   },
-  isAdmin: Boolean
+  isAdmin: Boolean,
+  cart: [
+    {
+      type: cartProductSchema,
+      required: true
+    }
+  ],
+  wishlist: [
+    {
+      type: wishlistProductSchema,
+      required: true
+    }
+  ],
+  orders: [
+    {
+      type: orderSchema,
+      required: true
+    }
+  ]
 });
 
 userSchema.methods.generateAuthToken = function() {

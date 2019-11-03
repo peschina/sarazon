@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
-const { userSchema } = require("./user");
 
-const productSchema = new mongoose.Schema({
+const cartProductSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 2,
@@ -23,26 +22,14 @@ const productSchema = new mongoose.Schema({
   }
 });
 
-const cartSchema = new mongoose.Schema({
-  user: { type: userSchema },
-  products: [
-    {
-      type: productSchema,
-      required: true
-    }
-  ]
-});
-
-const Cart = mongoose.model("Cart", cartSchema);
-
 const joiCartSchema = Joi.object({
   _id: Joi.objectId().required(),
   selectedQuantity: Joi.number()
-    .min(1)
+    .min(0)
     .required()
 });
 
 const validate = cart => joiCartSchema.validate(cart);
 
-exports.Cart = Cart;
 exports.validate = validate;
+exports.cartProductSchema = cartProductSchema;
