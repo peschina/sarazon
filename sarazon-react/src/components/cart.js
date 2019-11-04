@@ -7,6 +7,7 @@ import { cartProducts } from "./../fakeProductService";
 
 const Cart = () => {
   const [products, setProducts] = useState(cartProducts);
+  const [sponsored, setSponsored] = useState(cartProducts);
 
   const handleRemove = id => {
     const updatedProducts = products.filter(p => p._id !== id);
@@ -29,7 +30,7 @@ const Cart = () => {
     // save changes in db
   };
 
-  const handleCheckout = console.log("proceed to checkout");
+  const handleCheckout = () => console.log("proceed to checkout");
 
   const itemTemplate = ({
     _id,
@@ -71,7 +72,7 @@ const Cart = () => {
               ></Dropdown>
             </div>
             <div className="p-grid p-col">
-              <div className="p-col-4 p-col-md-3 p-col-lg-2">
+              <div className="p-col-5 p-col-md-3 p-col-lg-2">
                 <Button
                   label="Remove"
                   icon="pi pi-trash"
@@ -93,6 +94,37 @@ const Cart = () => {
       </Card>
     );
   };
+
+  const sponsoredTemplate = ({ _id, name, image, price }) => (
+    <Card className="p-col-12 p-grid p-align-center" key={_id}>
+      <div className="p-grid p-align-center">
+        <Link to={`/product/${_id}`} className="p-col-5">
+          <img
+            src={image}
+            alt={name}
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        </Link>
+        <div className="p-grid p-col-7">
+          <Link
+            to={`/product/${_id}`}
+            className="p-col"
+            style={{ fontWeight: "bold" }}
+          >
+            {name}
+          </Link>
+          <div className="p-col-12">Rating</div>
+          <div className="p-col-12">€{price}</div>
+          <div className="p-col-12">
+            <Button
+              label="Add to cart"
+              onClick={() => console.log("Add to cart")}
+            ></Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 
   const totalAmount = () => {
     let amount = 0;
@@ -116,37 +148,51 @@ const Cart = () => {
 
   return (
     <div className="p-grid p-justify-center">
-      <Card
-        footer={footer}
-        className="p-col-12 p-md-10 p-lg-8"
-        style={{ boxShadow: "unset" }}
-      >
-        <Card className="p-col-12">
-          <div className="p-grid p-col-12">
-            <div className="p-col" style={{ fontWeight: "bold" }}>
+      <div className=" p-grid p-justify-center p-col-12 p-md-8 p-lg-7">
+        <Card
+          footer={footer}
+          className="p-col-12"
+          style={{ boxShadow: "unset" }}
+        >
+          <div className="p-grid p-col-12" style={{ padding: "2em" }}>
+            <div
+              className="p-col-11"
+              style={{
+                textAlign: "left",
+                fontSize: "20px",
+                fontWeight: "bold"
+              }}
+            >
+              {"Cart"}
+            </div>
+            <div className="p-col-1" style={{ textAlign: "right" }}>
+              {"Price"}
+            </div>
+          </div>
+          {products.map(p => itemTemplate(p))}
+        </Card>
+      </div>
+      <div className="p-grid p-justify-center p-col-12 p-md-4 p-lg-3">
+        <Card className="p-col-12" style={{ boxShadow: "unset" }}>
+          <div className="p-col"></div>
+          <Card className="p-grid p-justify-center p-col-12">
+            <div className="p-col-12" style={{ fontWeight: "bold" }}>
               {`Subtotal (${products.length} items): €${totalAmount()}`}
             </div>
-            <div className="p-col" style={{ textAlign: "right" }}>
+            <div className="p-col-12">
               <Button
                 label="Proceed to checkout"
                 onClick={handleCheckout}
               ></Button>
             </div>
-          </div>
+          </Card>
+          <div className="p-col"></div>
+          <Card className="p-col-12" style={{ boxShadow: "unset" }}>
+            Sponsored for you{" "}
+          </Card>
+          {sponsored.map(p => sponsoredTemplate(p))}
         </Card>
-        <div className="p-grid p-col-12" style={{ padding: "2em" }}>
-          <div
-            className="p-col-11"
-            style={{ textAlign: "left", fontWeight: "bold" }}
-          >
-            {"Cart"}
-          </div>
-          <div className="p-col-1" style={{ textAlign: "right" }}>
-            {"Price"}
-          </div>
-        </div>
-        {products.map(p => itemTemplate(p))}
-      </Card>
+      </div>
     </div>
   );
 };
