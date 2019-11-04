@@ -11,13 +11,13 @@ const Cart = () => {
   const handleRemove = id => {
     const updatedProducts = products.filter(p => p._id !== id);
     setProducts(updatedProducts);
-    // save changes in db
+    // save changes in db, send id of product and selectedQuantity: 0
   };
 
   const handleMove = id => {
     const updatedProducts = products.filter(p => p._id !== id);
     setProducts(updatedProducts);
-    // save changes in db
+    // save changes in db, send id of product and selectedQuantity: 0
   };
 
   const handleProductQuantity = (value, id) => {
@@ -28,6 +28,8 @@ const Cart = () => {
     setProducts(updatedProducts);
     // save changes in db
   };
+
+  const handleCheckout = console.log("proceed to checkout");
 
   const itemTemplate = ({
     _id,
@@ -119,7 +121,20 @@ const Cart = () => {
         className="p-col-12 p-md-10 p-lg-8"
         style={{ boxShadow: "unset" }}
       >
-        <div className="p-grid p-col-12">
+        <Card className="p-col-12">
+          <div className="p-grid p-col-12">
+            <div className="p-col" style={{ fontWeight: "bold" }}>
+              {`Subtotal (${products.length} items): €${totalAmount()}`}
+            </div>
+            <div className="p-col" style={{ textAlign: "right" }}>
+              <Button
+                label="Proceed to checkout"
+                onClick={handleCheckout}
+              ></Button>
+            </div>
+          </div>
+        </Card>
+        <div className="p-grid p-col-12" style={{ padding: "2em" }}>
           <div
             className="p-col-11"
             style={{ textAlign: "left", fontWeight: "bold" }}
