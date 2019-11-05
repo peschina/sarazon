@@ -10,6 +10,7 @@ import Register from "./components/register";
 import Profile from "./components/profile";
 import Cart from "./components/cart";
 import Wishlist from "./components/wishlist";
+import Orders from "./components/orders";
 
 const App = ({ history }) => {
   return (
@@ -21,6 +22,7 @@ const App = ({ history }) => {
           <Route path="/products" component={Products} />
           <Route path="/cart" component={Cart} />
           <Route path="/wishlist" component={Wishlist} />
+          <Route path="/orders" component={Orders} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />

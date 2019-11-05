@@ -41,7 +41,8 @@ const Navbar = ({ history }) => {
           command: () => navigateToPage("/profile")
         },
         {
-          label: "Orders"
+          label: "Orders",
+          command: () => navigateToPage("/orders")
         },
         {
           label: "Wishlist",
