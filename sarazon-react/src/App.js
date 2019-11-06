@@ -9,6 +9,7 @@ import ProductPage from "./components/productPage";
 import Register from "./components/register";
 import Profile from "./components/profile";
 import Cart from "./components/cart";
+import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
 
@@ -26,6 +27,7 @@ const App = ({ history }) => {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
+          <Route path="/contact" component={Contact} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={Home} />
           <Redirect to="/not-found" />

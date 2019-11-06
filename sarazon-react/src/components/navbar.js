@@ -58,7 +58,8 @@ const Navbar = ({ history }) => {
       label: "About us"
     },
     {
-      label: "Contacts"
+      label: "Contacts",
+      command: () => navigateToPage("/contact")
     }
   ];
 
