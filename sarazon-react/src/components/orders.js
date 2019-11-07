@@ -29,9 +29,9 @@ const Orders = () => {
             {name}
           </Link>
           <div className="p-col">{price}</div>
-		  <div className="p-col">
-		  	<Button label="Buy again" onClick={handleAddToCart}></Button>
-		  </div>
+          <div className="p-col">
+            <Button label="Buy again" onClick={handleAddToCart}></Button>
+          </div>
         </div>
       </div>
     </Card>
@@ -52,45 +52,34 @@ const Orders = () => {
         style={{ marginBottom: "2em" }}
         key={_id}
       >
-			<div className='p-grid p-justify-center p-align-center'>
+        <div className="p-grid p-justify-center p-align-center">
           <div className="p-grid p-justify-center p-col-12 p-md-8 p-lg-8">
             {products.map(p => productTemplate(p))}
           </div>
-			<div className="p-grid p-dir-col p-col" >
-		  	<div className="p-col">
-			  <label className="p-col-12">Delivered: 
-				<div className="p-col-12">{creationDate}</div>
-			  </label>
-       		</div>
-		  	<div className="p-col">
-				<label className="p-col-12">Total: 
-				<div className="p-col-12">{`€${totalAmount}`}</div>
-			  </label>
-       		</div>
-		  	<div className="p-col">
-			  <label className="p-col-12">
-				Delivered to: 
-				<div className='p-col-12'>
-				  {`${deliveryAddress}`}
-	        	</div>
-	          </label>
-       		</div>
-	        </div>
+          <div className="p-grid p-dir-col p-col">
+            <div className="p-col">
+              <label className="p-col-12">
+                Delivered:
+                <div className="p-col-12">{creationDate}</div>
+              </label>
+            </div>
+            <div className="p-col">
+              <label className="p-col-12">
+                Total:
+                <div className="p-col-12">{`€${totalAmount}`}</div>
+              </label>
+            </div>
+            <div className="p-col">
+              <label className="p-col-12">
+                Delivered to:
+                <div className="p-col-12">{`${deliveryAddress}`}</div>
+              </label>
+            </div>
+          </div>
         </div>
       </Panel>
     );
   };
-  
-  const customHeader = (_id, creationDate, totalAmount) => (
-  	<div className='p-grid'>
-	  <div style={{ alignText: 'left' }}>
-    	{`${creationDate} / Order n. ${_id}`}
-	  </div>
-	  <div style={{ alignText: 'right' }}>
-    	{`Total: ${totalAmount}`}
-	  </div>
-	</div>
-  );
 
   return (
     <div className="p-grid p-justify-center">

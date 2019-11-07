@@ -252,6 +252,67 @@ export const categories = [
   }
 ];
 
+export const orders = [
+  {
+    _id: 1234,
+    creationDate: Date.now(),
+    products: [
+      {
+        _id: 15,
+        name: "Harry Potter and the Goblet of Fire",
+        description: placeholderText,
+        price: "€15",
+        image: yarn,
+        numberInStock: 25,
+        insertionDate: new Date("July 22, 2014 03:24:00"),
+        category: "Books"
+      },
+      {
+        _id: 16,
+        name: "The Hound of the Baskervilles",
+        description: placeholderText,
+        price: "€7",
+        image: yarn,
+        numberInStock: 30,
+        insertionDate: new Date("July 23, 2004 03:24:00"),
+        category: "Books"
+      },
+      {
+        _id: 17,
+        name: "Shaker Bottle",
+        description: placeholderText,
+        price: "€10",
+        image: yarn,
+        numberInStock: 50,
+        insertionDate: new Date("June 23, 2004 03:24:00"),
+        category: "Home & Kitchen"
+      }
+    ],
+    deliveryAddress: "Address 1",
+    billingAddress: "Address 1",
+    totalAmount: 40
+  },
+  {
+    _id: 2345,
+    creationDate: Date.now(),
+    products: [
+      {
+        _id: 15,
+        name: "Harry Potter and the Goblet of Fire",
+        description: placeholderText,
+        price: "€15",
+        image: yarn,
+        numberInStock: 25,
+        insertionDate: new Date("July 22, 2014 03:24:00"),
+        category: "Books"
+      }
+    ],
+    deliveryAddress: "Address 2",
+    billingAddress: "Address 2",
+    totalAmount: 22
+  }
+];
+
 export const getProduct = id =>
   allProducts.filter(p => p._id === parseInt(id))[0];
 
