@@ -5,9 +5,10 @@ import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
 import { MultiSelect } from "primereact/multiselect";
 import { allProducts, filterByCategory } from "../fakeProductService";
+import { getProducts } from "../services/productService";
 
 const Products = props => {
-  const [products, setProducts] = useState(allProducts);
+  const [products, setProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(null);
   const [sortKey, setSortKey] = useState(null);
@@ -33,20 +34,32 @@ const Products = props => {
     if (props.location.state) setCategories(props.location.state.category);
   }, [props.location.state]);
 
+  useEffect(() => {
+    const loadData = async () => {
+      const { data } = await getProducts();
+      setProducts(data);
+    };
+    loadData();
+  }, []);
+
   useDidUpdateEffect(filter, categories);
 
-  const itemTemplate = ({ _id, name, image, price }) => (
-    <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
-      <Panel header={name} style={{ textAlign: "center" }}>
-        <img
-          src={image}
-          alt={name}
-          style={{ maxWidth: "100%", height: "auto" }}
-        />
-        <div>{price}</div>
-      </Panel>
-    </Link>
-  );
+  const itemTemplate = product => {
+    if (!product) return null;
+    const { _id, name, image, price } = product;
+    return (
+      <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
+        <Panel header={name} style={{ textAlign: "center" }}>
+          <img
+            src={image}
+            alt={name}
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+          <div>{price}</div>
+        </Panel>
+      </Link>
+    );
+  };
 
   const onSortChange = ({ value }) => {
     if (value.indexOf("!") === 0) {
