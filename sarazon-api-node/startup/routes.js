@@ -9,15 +9,6 @@ const auth = require("../routes/auth");
 const error = require("../middleware/error");
 
 module.exports = function(app) {
-  app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-      "Access-Contro-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-  });
-
   app.use(express.json());
   app.use("/api/products", products);
   app.use("/api/categories", categories);
