@@ -6,6 +6,8 @@ import { Button } from "primereact/button";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/registerForm";
+import * as userService from "../services/userService";
+import { showMessage } from "./../utils";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -31,7 +33,7 @@ const Register = () => {
     c_password: c_pwErr
   } = errors;
 
-  const save = () => {
+  const save = async () => {
     setErrors({});
 
     const { error } = validate({
@@ -46,7 +48,21 @@ const Register = () => {
       error.details.map(i => (errs[i.path[0]] = i.message));
       setErrors(errs);
     }
-    console.log("save data...");
+    try {
+      const result = await userService.register({
+        username: username,
+        email: email,
+        password: password
+      });
+      if (result.request.status === 200)
+        showMessage(growl, "success", "User registered");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        let errs = { ...errorsRef };
+        errs.username = ex.response.data;
+        setErrors(errs);
+      }
+    }
   };
 
   const renderInputText = (label, value, error, handleChange) => (
@@ -73,7 +89,7 @@ const Register = () => {
     <>
       <div className="p-grid p-justify-center">
         <Growl ref={el => (growl.current = el)} />
-        <div className="p-col-12 p-md-8 p-lg-3">
+        <div className="p-col-12 p-md-8 p-lg-4">
           <Card
             className="p-fluid"
             style={{ padding: "1em" }}
