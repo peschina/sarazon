@@ -7,9 +7,8 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/registerForm";
 import * as userService from "../services/userService";
-import { showMessage } from "./../utils";
 
-const Register = () => {
+const Register = props => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [c_email, setC_email] = useState("");
@@ -49,13 +48,13 @@ const Register = () => {
       setErrors(errs);
     }
     try {
-      const result = await userService.register({
+      const response = await userService.register({
         username: username,
         email: email,
         password: password
       });
-      if (result.request.status === 200)
-        showMessage(growl, "success", "User registered");
+      localStorage.setItem("token", response.headers["x-auth-token"]);
+      window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         let errs = { ...errorsRef };

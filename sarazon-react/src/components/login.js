@@ -6,8 +6,9 @@ import { Card } from "primereact/card";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/loginForm";
+import { login } from "../services/authService";
 
-const Login = () => {
+const Login = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [unError, setUnError] = useState();
@@ -15,7 +16,7 @@ const Login = () => {
 
   const growl = useRef();
 
-  const login = () => {
+  const handleClick = async () => {
     setUnError("");
     setPwError("");
     const { error } = validate({ username, password });
@@ -28,6 +29,15 @@ const Login = () => {
       return;
     }
     console.log("call to server..., redirect");
+    try {
+      const { data: jwt } = await login(username, password);
+      localStorage.setItem("token", jwt);
+      window.location = "/";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        setUnError(ex.response.data);
+      }
+    }
   };
 
   const changePassword = () => {
@@ -61,7 +71,7 @@ const Login = () => {
             style={{ marginBottom: "15px" }}
             label="Sign In"
             icon="pi pi-user"
-            onClick={login}
+            onClick={handleClick}
           />
           <Button
             label="Forgot Password?"
