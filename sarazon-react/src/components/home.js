@@ -1,10 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "primereact/carousel";
-import { categories as allCategories } from "../fakeProductService";
+import { Card } from "primereact/card";
+import { getCategories } from "./../services/categoryService";
 
 const Home = () => {
-  const [categories, setCategories] = useState(allCategories);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const { data } = await getCategories();
+      setCategories(data);
+    };
+    loadData();
+  }, []);
 
   const responsiveSettings = [
     {
