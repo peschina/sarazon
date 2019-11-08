@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import Home from "./components/home";
 import Login from "./components/login";
 import Navbar from "./components/navbar";
@@ -13,10 +14,21 @@ import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
 
-const App = ({ history }) => {
+const App = () => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    console.log("mounted");
+    try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      setUser(user);
+    } catch (err) {}
+  }, []);
+
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <main>
         <Switch>
           <Route path="/product/:id" component={ProductPage} />
