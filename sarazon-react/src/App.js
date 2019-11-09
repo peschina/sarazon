@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 import Home from "./components/home";
 import Login from "./components/login";
 import Navbar from "./components/navbar";
@@ -14,16 +13,14 @@ import Cart from "./components/cart";
 import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
+import auth from "./services/authService";
 
 const App = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    try {
-      const jwt = localStorage.getItem("token");
-      const user = jwtDecode(jwt);
-      setUser(user);
-    } catch (err) {}
+    const user = auth.getCurrentUser();
+    setUser(user);
   }, []);
 
   return (
