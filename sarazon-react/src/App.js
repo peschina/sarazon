@@ -13,6 +13,7 @@ import Cart from "./components/cart";
 import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
+import ProtectedRoute from "./components/protectedRoute";
 import auth from "./services/authService";
 
 const App = () => {
@@ -33,27 +34,9 @@ const App = () => {
           <Route path="/cart" component={Cart} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route
-            path="/profile"
-            render={props => {
-              if (!user) return <Redirect to="/login" />;
-              return <Profile />;
-            }}
-          />
-          <Route
-            path="/orders"
-            render={props => {
-              if (!user) return <Redirect to="/login" />;
-              return <Orders />;
-            }}
-          />
-          <Route
-            path="/wishlist"
-            render={props => {
-              if (!user) return <Redirect to="/login" />;
-              return <Wishlist />;
-            }}
-          />
+          <ProtectedRoute path="/profile" component={Profile} />
+          <ProtectedRoute path="/orders" component={Orders} />
+          <ProtectedRoute path="/wishlist" component={Wishlist} />
           <Route path="/logout" component={Logout} />
           <Route path="/contact" component={Contact} />
           <Route path="/not-found" component={NotFound} />
