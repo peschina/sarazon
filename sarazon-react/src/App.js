@@ -9,6 +9,7 @@ import Products from "./components/products";
 import ProductPage from "./components/productPage";
 import Register from "./components/register";
 import Profile from "./components/profile";
+import Logout from "./components/logout";
 import Cart from "./components/cart";
 import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
@@ -18,7 +19,6 @@ const App = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    console.log("mounted");
     try {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
@@ -39,6 +39,7 @@ const App = () => {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
+          <Route path="/logout" component={Logout} />
           <Route path="/contact" component={Contact} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={Home} />

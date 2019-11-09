@@ -4,7 +4,7 @@ import { Menubar } from "primereact/menubar";
 import { Menu } from "primereact/menu";
 import { Button } from "primereact/button";
 
-const Navbar = ({ history }) => {
+const Navbar = ({ history, user }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   let menuRef = useRef();
@@ -50,7 +50,8 @@ const Navbar = ({ history }) => {
         },
         {
           label: "Logout",
-          icon: "pi pi-power-off"
+          icon: "pi pi-power-off",
+          command: () => navigateToPage("/logout")
         }
       ]
     },
@@ -88,10 +89,9 @@ const Navbar = ({ history }) => {
           style={{ marginBottom: "1em" }}
         >
           <div className="p-col">
-            <Link to="/">Logo</Link>
-          </div>
-          <div className="p-col-5">
-            <Menubar model={items}></Menubar>
+            <Menubar model={items}>
+              <Link to="/">Sarazon</Link>
+            </Menubar>
           </div>
         </div>
       )}

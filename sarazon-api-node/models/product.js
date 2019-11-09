@@ -57,4 +57,3 @@ const validateProduct = product => joiProductSchema.validate(product);
 exports.Product = Product;
 exports.validate = validateProduct;
 exports.productSchema = productSchema;
-exports.joiProductSchema = joiProductSchema;
