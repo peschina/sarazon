@@ -5,6 +5,8 @@ const apiUrl = "http://localhost:3000/api";
 const apiEndpoint = apiUrl + "/auth";
 const tokenKey = "token";
 
+http.setJwt(getJwt());
+
 async function login(email, password) {
   const { data: jwt } = await http.post(apiEndpoint, {
     email,
