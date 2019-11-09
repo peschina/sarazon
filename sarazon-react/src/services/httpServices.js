@@ -1,5 +1,8 @@
 import axios from "axios";
 //import logger from "./logService";
+import auth from "./authService";
+
+axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
 
 axios.interceptors.response.use(null, error => {
   const expectedError =
@@ -9,7 +12,8 @@ axios.interceptors.response.use(null, error => {
   if (!expectedError) {
     console.log(error);
     //logger.log(error);
-    //toast.error("un unexpected error occured");
+    // SHOW TOAST MESSAGE WITH ERROR?
+    console.log(error);
   }
   return Promise.reject(error);
 });

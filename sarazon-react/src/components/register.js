@@ -7,6 +7,7 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/registerForm";
 import * as userService from "../services/userService";
+import auth from "../services/authService";
 
 const Register = props => {
   const [username, setUsername] = useState("");
@@ -53,7 +54,7 @@ const Register = props => {
         email: email,
         password: password
       });
-      localStorage.setItem("token", response.headers["x-auth-token"]);
+      auth.loginWithJwt(response.headers["x-auth-token"]);
       window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {

@@ -1,5 +1,7 @@
+import auth from "../services/authService";
+
 const Logout = () => {
-  localStorage.removeItem("token");
+  auth.logout();
   window.location = "/";
   return null;
 };

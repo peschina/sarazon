@@ -6,7 +6,7 @@ import { Card } from "primereact/card";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/loginForm";
-import { login } from "../services/authService";
+import auth from "../services/authService";
 
 const Login = props => {
   const [username, setUsername] = useState("");
@@ -30,8 +30,7 @@ const Login = props => {
     }
     console.log("call to server..., redirect");
     try {
-      const { data: jwt } = await login(username, password);
-      localStorage.setItem("token", jwt);
+      await auth.login(username, password);
       window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
