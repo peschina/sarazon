@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -31,7 +31,8 @@ const Login = props => {
     console.log("call to server..., redirect");
     try {
       await auth.login(username, password);
-      window.location = "/";
+      const { state } = props.location;
+      window.location = state ? state.from.pathname : "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         setUnError(ex.response.data);
@@ -43,6 +44,7 @@ const Login = props => {
     console.log("change password...");
   };
 
+  if (auth.getCurrentUser()) return <Redirect to="/" />;
   return (
     <div className="p-grid p-justify-center">
       <Growl ref={el => (growl.current = el)} />
