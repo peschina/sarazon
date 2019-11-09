@@ -30,30 +30,29 @@ const Navbar = ({ history, user }) => {
       icon: "pi pi-shopping-cart"
     },
     {
-      label: "Personal area",
-      items: [
-        {
-          label: "Login",
-          command: () => navigateToPage("/login")
-        },
-        {
-          label: "Profile",
-          command: () => navigateToPage("/profile")
-        },
-        {
-          label: "Orders",
-          command: () => navigateToPage("/orders")
-        },
-        {
-          label: "Wishlist",
-          command: () => navigateToPage("/wishlist")
-        },
-        {
-          label: "Logout",
-          icon: "pi pi-power-off",
-          command: () => navigateToPage("/logout")
-        }
-      ]
+      label: user ? "Personal area" : "Login",
+      command: user ? null : () => navigateToPage("/login"),
+      items: user
+        ? [
+            {
+              label: "Profile",
+              command: () => navigateToPage("/profile")
+            },
+            {
+              label: "Orders",
+              command: () => navigateToPage("/orders")
+            },
+            {
+              label: "Wishlist",
+              command: () => navigateToPage("/wishlist")
+            },
+            {
+              label: "Logout",
+              icon: "pi pi-power-off",
+              command: () => navigateToPage("/logout")
+            }
+          ]
+        : null
     },
     {
       label: "About us"
