@@ -1,5 +1,4 @@
 import axios from "axios";
-//import logger from "./logService";
 
 axios.interceptors.response.use(null, error => {
   const expectedError =
@@ -8,7 +7,6 @@ axios.interceptors.response.use(null, error => {
     error.response.status < 500;
   if (!expectedError) {
     console.log(error);
-    //logger.log(error);
     // SHOW TOAST MESSAGE WITH ERROR?
     console.log(error);
   }

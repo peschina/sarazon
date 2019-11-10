@@ -1,10 +1,9 @@
 import http from "./httpServices";
-//import { apiUrl } from "../config.json";
-const apiUrl = "http://localhost:3000/api";
-const apiEndpoint = apiUrl + "/users";
+import { apiEndpoint } from "../config.json";
+const apiUrl = apiEndpoint + "/users";
 
 export function register(user) {
-  return http.post(apiEndpoint, {
+  return http.post(apiUrl, {
     username: user.username,
     email: user.email,
     password: user.password
