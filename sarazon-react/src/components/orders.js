@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
-import { orders as allOrders } from "../fakeProductService";
+// import { orders as allOrders } from "../fakeProductService";
+import { getOrders } from "./../services/orderService";
 
 const Orders = () => {
-  const [orders, setOrders] = useState(allOrders);
+  const [orders, setOrders] = useState([]);
 
-  const handleAddToCart = () => console.log('add to cart');
+  useEffect(() => {
+    const loadData = async () => {
+      const { data } = await getOrders();
+      setOrders(data);
+    };
+    loadData();
+  }, []);
+
+  const handleAddToCart = () => console.log("add to cart");
 
   const productTemplate = ({ _id, name, image, price }) => (
     <Card className="p-col-12" style={{ boxShadow: "unset" }} key={_id}>
