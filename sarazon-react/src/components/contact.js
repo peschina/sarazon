@@ -6,6 +6,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/contactForm";
+import { showMessage } from "./../utils";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -23,7 +24,7 @@ const Contact = () => {
 
   const { name: nameErr, email: emErr, message: msgErr } = errors;
 
-  const save = () => {
+  const handleClick = () => {
     setErrors({});
 
     const { error } = validate({
@@ -37,6 +38,7 @@ const Contact = () => {
       setErrors(errs);
     }
     console.log("save data...");
+    showMessage(growl, "success", "Message sent!");
   };
 
   const renderInputText = (label, value, error, handleChange) => (
@@ -72,7 +74,7 @@ const Contact = () => {
                 {msgErr && <Message severity="error" text={msgErr}></Message>}
               </div>
               <div className="p-col-3">
-                <Button label="Send" onClick={save} />
+                <Button label="Send" onClick={handleClick} />
               </div>
             </div>
           </Card>
