@@ -14,7 +14,7 @@ require("./startup/config")();
 
 app.get("/", (req, res) => res.send("This is sarazon homepage"));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3090;
 app.listen(port, () => {
   winston.info(`listening on port ${port}`);
 });
