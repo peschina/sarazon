@@ -5,7 +5,6 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { Fieldset } from "primereact/fieldset";
 import { getProduct } from "../fakeProductService";
-import "../app.css";
 
 const ProductPage = props => {
   const [stars, setStars] = useState(0);

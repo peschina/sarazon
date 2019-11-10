@@ -55,11 +55,18 @@ const Navbar = ({ history, user }) => {
         : null
     },
     {
-      label: "About us"
+      label: "About"
     },
     {
       label: "Contacts",
       command: () => navigateToPage("/contact")
+    }
+  ];
+
+  const logo = [
+    {
+      label: "Sarazon",
+      command: () => navigateToPage("/")
     }
   ];
 
@@ -87,11 +94,16 @@ const Navbar = ({ history, user }) => {
           className="p-grid p-justify-between"
           style={{ marginBottom: "1em" }}
         >
-          <div className="p-col">
-            <Menubar model={items}>
-              <Link to="/">Sarazon</Link>
-            </Menubar>
-          </div>
+          <Menubar
+            model={logo}
+            className="p-col-12 ui-menubar-custom"
+            style={{ fontSize: "20px" }}
+          ></Menubar>
+          <Menubar
+            model={items}
+            className="p-col-12"
+            style={{ textAlign: "center" }}
+          ></Menubar>
         </div>
       )}
     </div>

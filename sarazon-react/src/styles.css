@@ -1,0 +1,36 @@
+.p-fieldset {
+  border: none !important;
+}
+
+.p-fieldset-legend a {
+  border: none !important;
+  background-color: white !important;
+}
+
+.p-dropdown {
+  min-width: 4em !important;
+}
+
+.ui-menubar-custom {
+  color: white !important;
+  background-color: #0e2031 !important;
+  text-align: center;
+  display: block;
+  height: 70px;
+  /* top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999; */
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.p-menubar .p-submenu-list .p-menuitem {
+  text-align: left;
+}
+/* 
+.p-button {
+  background-color: #1ab394 !important;
+  border: 1px solid #1ab394 !important;
+  background-color: #009688 !important;
+  border: 1px solid #009688 !important;
+} */
