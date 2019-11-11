@@ -33,7 +33,7 @@ const Home = () => {
     }
   ];
 
-  const itemTemplate = ({ _id, name, image }) => (
+  const itemTemplate = ({ _id, name }) => (
     <Link
       to={{ pathname: "/products", state: { category: [name] } }}
       className="p-grid p-nogutter"
@@ -43,6 +43,13 @@ const Home = () => {
       </div>
       <div className="p-col-12">
         <img
+          src={`http://localhost:3090/images/${name}.jpg`}
+          alt={name}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </div>
+    </Link>
+  );
           src={image}
           alt={name}
           style={{ maxWidth: "100%", height: "auto" }}
