@@ -8,3 +8,12 @@ export function getProducts() {
 export function getProduct(id) {
   return http.get(`${apiEndpoint}/products/${id}`);
 }
+
+export function getProductByCategory(category) {
+  const { name, _id } = category;
+  return http.get(
+    `${apiEndpoint}/products?categoryId=${encodeURIComponent(
+      _id
+    )}&name=${encodeURIComponent(name)}`
+  );
+}

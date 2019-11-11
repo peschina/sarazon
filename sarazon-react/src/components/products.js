@@ -4,19 +4,33 @@ import { DataView } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
 import { MultiSelect } from "primereact/multiselect";
-import { allProducts, filterByCategory } from "../fakeProductService";
-import { getProducts } from "../services/productService";
+import { getProducts, getProductByCategory } from "../services/productService";
+import { getCategories } from "./../services/categoryService";
 
 const Products = props => {
   const [products, setProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(null);
   const [sortKey, setSortKey] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
 
-  const filter = useCallback(() => setProducts(filterByCategory(categories)), [
-    categories
-  ]);
+  const filter = useCallback(async () => {
+    const selected = selectedCategories.map(c => {
+      return {
+        _id: allCategories.filter(cat => cat.name == c)[0]._id,
+        name: c
+      };
+    });
+    const selectedProducts = await Promise.all(
+      selected.map(async c => {
+        const { data } = await getProductByCategory(c);
+        return data;
+      })
+    );
+    const merged = [].concat.apply([], selectedProducts);
+    setProducts(merged);
+  }, [selectedCategories]);
 
   function useDidUpdateEffect(fn, dependency) {
     const didMountRef = useRef(false);
@@ -31,18 +45,25 @@ const Products = props => {
   }
 
   useEffect(() => {
-    if (props.location.state) setCategories(props.location.state.category);
+    if (props.location.state)
+      setSelectedCategories(props.location.state.category);
   }, [props.location.state]);
 
   useEffect(() => {
     const loadData = async () => {
-      const { data } = await getProducts();
-      setProducts(data);
+      const { data: products } = await getProducts();
+      setProducts(products);
+      const { data: categories } = await getCategories();
+      categories.forEach(c => {
+        c.label = c.name;
+        c.value = c.name;
+      });
+      setAllCategories(categories);
     };
     loadData();
   }, []);
 
-  useDidUpdateEffect(filter, categories);
+  useDidUpdateEffect(filter, selectedCategories);
 
   const itemTemplate = product => {
     if (!product) return null;
@@ -73,7 +94,7 @@ const Products = props => {
     setSortKey(value);
   };
 
-  const onFilterChange = ({ value }) => setCategories(value);
+  const onFilterChange = ({ value }) => setSelectedCategories(value);
 
   const renderHeader = () => {
     const sortOptions = [
@@ -83,19 +104,13 @@ const Products = props => {
       { label: "Price: decrescent", value: "!price" }
     ];
 
-    const categoriesSelectItem = [
-      { label: "Books", value: "Books" },
-      { label: "Home & Kitchen", value: "Home & Kitchen" },
-      { label: "Women fashion", value: "Women fashion" }
-    ];
-
     return (
       <div className="p-grid">
         <div className="p-col-6 p-md-3 p-lg-2" style={{ textAlign: "left" }}>
           <MultiSelect
-            value={categories}
+            value={selectedCategories}
             placeholder="Categories"
-            options={categoriesSelectItem}
+            options={allCategories}
             onChange={onFilterChange}
           />
         </div>
