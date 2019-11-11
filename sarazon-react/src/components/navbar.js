@@ -4,7 +4,7 @@ import { Menubar } from "primereact/menubar";
 import { Menu } from "primereact/menu";
 import { Button } from "primereact/button";
 
-const Navbar = ({ history, user }) => {
+const Navbar = ({ user }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   let menuRef = useRef();
@@ -17,39 +17,41 @@ const Navbar = ({ history, user }) => {
     );
   }, []);
 
-  const navigateToPage = path => history.push(path);
-
   const items = [
     {
+      label: "Home",
+      url: "/"
+    },
+    {
       label: "Shop",
-      command: () => navigateToPage("/products")
+      url: "/products"
     },
     {
       label: "Cart",
-      command: () => navigateToPage("/cart"),
+      url: "/cart",
       icon: "pi pi-shopping-cart"
     },
     {
       label: user ? "Personal area" : "Login",
-      command: user ? null : () => navigateToPage("/login"),
+      url: user ? null : "/login",
       items: user
         ? [
             {
               label: "Profile",
-              command: () => navigateToPage("/profile")
+              url: "/profile"
             },
             {
               label: "Orders",
-              command: () => navigateToPage("/orders")
+              url: "/orders"
             },
             {
               label: "Wishlist",
-              command: () => navigateToPage("/wishlist")
+              url: "/wishlist"
             },
             {
               label: "Logout",
               icon: "pi pi-power-off",
-              command: () => navigateToPage("/logout")
+              url: "/logout"
             }
           ]
         : null
@@ -59,34 +61,33 @@ const Navbar = ({ history, user }) => {
     },
     {
       label: "Contacts",
-      command: () => navigateToPage("/contact")
+      url: "/contact"
     }
   ];
 
   const logo = [
     {
-      label: "Sarazon",
-      command: () => navigateToPage("/")
+      label: "Sarazon"
     }
   ];
 
   return (
     <div style={{ marginBottom: "1em" }}>
       {isMobile ? (
-        <div
-          className="p-grid p-justify-between"
-          style={{ marginBottom: "1em" }}
-        >
-          <div className="p-col-2">
+        <div className="p-grid" style={{ marginBottom: "1em" }}>
+          <div className="p-col-12">
             <Menu ref={el => (menuRef = el)} model={items} popup={true} />
-            <Button
-              type="button"
-              icon="pi pi-bars"
-              onClick={e => menuRef.toggle(e)}
-            ></Button>
-          </div>
-          <div className="p-col-5">
-            <Link to="/">Logo</Link>
+            <div className="p-grid p-justify-between">
+              <Button
+                type="button"
+                icon="pi pi-bars"
+                className="p-col-5"
+                onClick={e => menuRef.toggle(e)}
+              ></Button>
+              <Link to="/" className="p-col-7">
+                Sarazon
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
