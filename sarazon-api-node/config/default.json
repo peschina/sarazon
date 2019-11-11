@@ -1,3 +1,5 @@
 {
-	"jwtPrivateKey": ""
+  "jwtPrivateKey": "",
+  "db": "mongodb://localhost/sarazon",
+  "port": "3090"
 }
