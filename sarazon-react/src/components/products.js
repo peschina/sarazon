@@ -15,22 +15,42 @@ const Products = props => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
+  useEffect(() => {
+    const loadProducts = async () => {
+      const { data: products } = await getProducts();
+      setProducts(products);
+      const { data: categories } = await getCategories();
+      categories.forEach(c => {
+        c.label = c.name;
+        c.value = c.name;
+      });
+      setAllCategories(categories);
+    };
+    loadProducts();
+  }, []);
+
   const filter = useCallback(async () => {
+    if (selectedCategories.length === 0) return;
+    if (allCategories.length === 0) return;
     const selected = selectedCategories.map(c => {
       return {
         _id: allCategories.filter(cat => cat.name == c)[0]._id,
         name: c
       };
     });
-    const selectedProducts = await Promise.all(
-      selected.map(async c => {
-        const { data } = await getProductByCategory(c);
-        return data;
-      })
-    );
-    const merged = [].concat.apply([], selectedProducts);
-    setProducts(merged);
-  }, [selectedCategories]);
+    try {
+      const selectedProducts = await Promise.all(
+        selected.map(async c => {
+          const { data } = await getProductByCategory(c);
+          return data;
+        })
+      );
+      const merged = [].concat.apply([], selectedProducts);
+      setProducts(merged);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [selectedCategories, allCategories]);
 
   function useDidUpdateEffect(fn, dependency) {
     const didMountRef = useRef(false);
@@ -46,22 +66,8 @@ const Products = props => {
 
   useEffect(() => {
     if (props.location.state)
-      setSelectedCategories(props.location.state.category);
+      setSelectedCategories([props.location.state.category]);
   }, [props.location.state]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      const { data: products } = await getProducts();
-      setProducts(products);
-      const { data: categories } = await getCategories();
-      categories.forEach(c => {
-        c.label = c.name;
-        c.value = c.name;
-      });
-      setAllCategories(categories);
-    };
-    loadData();
-  }, []);
 
   useDidUpdateEffect(filter, selectedCategories);
 
