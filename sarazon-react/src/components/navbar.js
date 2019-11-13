@@ -1,30 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React from "react";
+import { withRouter } from "react-router-dom";
 import { Menubar } from "primereact/menubar";
-import { Menu } from "primereact/menu";
-import { Button } from "primereact/button";
 
 const Navbar = ({ user }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  let menuRef = useRef();
-
-  useEffect(() => {
-    window.addEventListener("resize", setIsMobile(window.innerWidth < 425));
-    return window.removeEventListener(
-      "resize",
-      setIsMobile(window.innerWidth < 425)
-    );
-  }, []);
-
   const items = [
     {
       label: "Home",
-      url: "/"
+      url: "/",
+      icon: "pi pi-home"
     },
     {
       label: "Shop",
-      url: "/products"
+      url: "/products",
+      icon: "pi pi-list"
     },
     {
       label: "Cart",
@@ -34,34 +22,40 @@ const Navbar = ({ user }) => {
     {
       label: user ? "Personal area" : "Login",
       url: user ? null : "/login",
+      icon: user? "pi pi-user" : "pi pi-sign-in",
       items: user
         ? [
             {
               label: "Profile",
-              url: "/profile"
+              url: "/profile",
+		      icon: "pi pi-user-edit",
             },
             {
               label: "Orders",
-              url: "/orders"
+              url: "/orders",
+		      icon: "pi pi-file"
             },
             {
               label: "Wishlist",
-              url: "/wishlist"
+              url: "/wishlist",
+		      icon: "pi pi-bookmark"
             },
             {
               label: "Logout",
-              icon: "pi pi-power-off",
-              url: "/logout"
+              url: "/logout",
+              icon: "pi pi-power-off"
             }
           ]
         : null
     },
     {
-      label: "About"
+      label: "About",
+	  icon: "pi pi-info",
     },
     {
       label: "Contacts",
-      url: "/contact"
+      url: "/contact",
+	  icon: "pi pi-question",
     }
   ];
 
@@ -72,25 +66,6 @@ const Navbar = ({ user }) => {
   ];
 
   return (
-    <div style={{ marginBottom: "1em" }}>
-      {isMobile ? (
-        <div className="p-grid" style={{ marginBottom: "1em" }}>
-          <div className="p-col-12">
-            <Menu ref={el => (menuRef = el)} model={items} popup={true} />
-            <div className="p-grid p-justify-between">
-              <Button
-                type="button"
-                icon="pi pi-bars"
-                className="p-col-5"
-                onClick={e => menuRef.toggle(e)}
-              ></Button>
-              <Link to="/" className="p-col-7">
-                Sarazon
-              </Link>
-            </div>
-          </div>
-        </div>
-      ) : (
         <div
           className="p-grid p-justify-between"
           style={{ marginBottom: "1em" }}
@@ -106,8 +81,6 @@ const Navbar = ({ user }) => {
             style={{ textAlign: "center" }}
           ></Menubar>
         </div>
-      )}
-    </div>
   );
 };
 
