@@ -50,6 +50,7 @@ const Navbar = ({ user }) => {
     },
     {
       label: "About",
+      url: "/about",
 	  icon: "pi pi-info",
     },
     {

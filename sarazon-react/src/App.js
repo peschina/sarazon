@@ -11,6 +11,7 @@ import Profile from "./components/profile";
 import Logout from "./components/logout";
 import Cart from "./components/cart";
 import Contact from "./components/contact";
+import About from "./components/about";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
 import ProtectedRoute from "./components/protectedRoute";
@@ -39,6 +40,7 @@ const App = () => {
           <ProtectedRoute path="/wishlist" component={Wishlist} />
           <Route path="/logout" component={Logout} />
           <Route path="/contact" component={Contact} />
+          <Route path="/about" component={About} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={Home} />
           <Redirect to="/not-found" />
