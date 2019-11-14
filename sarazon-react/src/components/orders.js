@@ -3,18 +3,19 @@ import { Link } from "react-router-dom";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
-// import { orders as allOrders } from "../fakeProductService";
-import { getOrders } from "./../services/orderService";
+import { orders as allOrders } from "../fakeProductService";
+//import { getOrders } from "./../services/orderService";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const { data } = await getOrders();
-      setOrders(data);
-    };
-    loadData();
+    //const loadData = async () => {
+    //  const { data } = await getOrders();
+    //  setOrders(data);
+    //};
+    //loadData();
+	setOrders(allOrders);
   }, []);
 
   const handleAddToCart = () => console.log("add to cart");
