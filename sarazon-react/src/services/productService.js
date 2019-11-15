@@ -9,11 +9,24 @@ export function getProduct(id) {
   return http.get(`${apiEndpoint}/products/${id}`);
 }
 
-export function getProductByCategory(category) {
-  const { name, _id } = category;
+export function getProductsByCategory(category) {
+  const { _id } = category;
+  return http.get(
+    `${apiEndpoint}/products?categoryId=${encodeURIComponent(_id)}`
+  );
+}
+
+export function getLatestProductsByCategory(category) {
+  const { _id } = category;
   return http.get(
     `${apiEndpoint}/products?categoryId=${encodeURIComponent(
       _id
-    )}&name=${encodeURIComponent(name)}`
+    )}&latest=${encodeURIComponent(true)}`
+  );
+}
+
+export function getSponsoredProducts() {
+  return http.get(
+    `${apiEndpoint}/products?sponsored=${encodeURIComponent(true)}`
   );
 }
