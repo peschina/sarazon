@@ -5,7 +5,7 @@ const categorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    min: 5,
+    min: 3,
     max: 50
   }
 });
@@ -13,9 +13,9 @@ const categorySchema = new mongoose.Schema({
 const Category = mongoose.model("Category", categorySchema);
 
 const joiCategorySchema = Joi.object({
-	name: Joi.string()
-    .min(5)
-	.max(50)
+  name: Joi.string()
+    .min(3)
+    .max(50)
     .required()
 });
 

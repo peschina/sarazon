@@ -6,7 +6,31 @@ const { Product, validate } = require("../models/product");
 const { Category } = require("../models/category");
 
 router.get("/", async (req, res) => {
-  const products = await Product.find().sort("name");
+  let products;
+  const { categoryId, latest, sponsored } = req.query;
+  if (categoryId) {
+    const category = await Category.findById(categoryId);
+    if (!category) return res.status(404).send("Invalid category");
+    const { _id, name } = category;
+
+    products = await Product.find({
+      category: { _id, name }
+    });
+    if (latest) {
+      products = await Product.find({
+        category: { _id, name }
+      })
+        .sort({ insertionDate: -1 })
+        .limit(2);
+    }
+  }
+  if (sponsored) {
+    products = await Product.find()
+      .sort({ insertionDate: -1 })
+      .limit(3);
+  } else {
+    products = await Product.find().sort("name");
+  }
   res.send(products);
 });
 
@@ -27,18 +51,19 @@ router.post("/", [auth, admin], async (req, res) => {
     description,
     numberInStock
   } = req.body;
+
   const category = await Category.findById(categoryId);
   if (!category) return res.status(404).send("Invalid genre");
   const product = new Product({
-    name: name,
-    price: price,
+    name,
+    price,
     category: {
       _id: category._id,
       name: category.name
     },
-    image: image,
-    description: description,
-    numberInStock: numberInStock
+    image,
+    description,
+    numberInStock
   });
   await product.save();
   res.send(product);
@@ -60,15 +85,15 @@ router.put("/:id", [auth, admin], async (req, res) => {
   const product = await Product.findByIdAndUpdate(
     req.params.id,
     {
-      name: name,
-      price: price,
+      name,
+      price,
       category: {
         _id: category._id,
         name: category.name
       },
-      image: image,
-      description: description,
-      numberInStock: numberInStock
+      image,
+      description,
+      numberInStock
     },
     { new: true }
   );
