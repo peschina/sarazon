@@ -23,6 +23,10 @@
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
 }
 
+.p-menubar {
+  z-index: 999;
+}
+
 .p-menubar .p-submenu-list .p-menuitem {
   text-align: left;
 }
