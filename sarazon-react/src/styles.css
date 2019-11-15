@@ -12,15 +12,14 @@
 }
 
 .ui-menubar-custom {
-  color: white !important;
-  background-color: #0e2031 !important;
+  /* background-color: #0e2031 !important; */
   text-align: center;
   display: block;
   height: 70px;
   /* top: 0;
   left: 0;
-  width: 100%;
-  z-index: 999; */
+  width: 100%; */
+  z-index: 999;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
 }
 
