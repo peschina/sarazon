@@ -6,8 +6,8 @@ const { Product, validate } = require("../models/product");
 const { Category } = require("../models/category");
 
 router.get("/", async (req, res) => {
-  let products;
   const { categoryId, latest, sponsored } = req.query;
+  let products = await Product.find().sort("name");
   if (categoryId) {
     const category = await Category.findById(categoryId);
     if (!category) return res.status(404).send("Invalid category");
@@ -28,8 +28,6 @@ router.get("/", async (req, res) => {
     products = await Product.find()
       .sort({ insertionDate: -1 })
       .limit(3);
-  } else {
-    products = await Product.find().sort("name");
   }
   res.send(products);
 });
