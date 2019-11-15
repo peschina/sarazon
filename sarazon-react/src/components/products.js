@@ -4,7 +4,7 @@ import { DataView } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
 import { MultiSelect } from "primereact/multiselect";
-import { getProducts, getProductByCategory } from "../services/productService";
+import { getProducts, getProductsByCategory } from "../services/productService";
 import { getCategories } from "./../services/categoryService";
 
 const Products = props => {
@@ -38,18 +38,14 @@ const Products = props => {
         name: c
       };
     });
-    try {
-      const selectedProducts = await Promise.all(
-        selected.map(async c => {
-          const { data } = await getProductByCategory(c);
-          return data;
-        })
-      );
-      const merged = [].concat.apply([], selectedProducts);
-      setProducts(merged);
-    } catch (err) {
-      console.log(err);
-    }
+    const selectedProducts = await Promise.all(
+      selected.map(async c => {
+        const { data } = await getProductsByCategory(c);
+        return data;
+      })
+    );
+    const merged = [].concat.apply([], selectedProducts);
+    setProducts(merged);
   }, [selectedCategories, allCategories]);
 
   function useDidUpdateEffect(fn, dependency) {

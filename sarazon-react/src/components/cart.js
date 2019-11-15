@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { cartProducts } from "./../fakeProductService";
+import { getSponsoredProducts } from "./../services/productService";
 
 const Cart = () => {
   const [products, setProducts] = useState(cartProducts);
   const [sponsored, setSponsored] = useState(cartProducts);
+
+  useEffect(() => {
+    loadSponsoredProducts();
+  }, []);
+
+  const loadSponsoredProducts = async () => {
+    const { data: products } = await getSponsoredProducts();
+    setSponsored(products);
+  };
 
   const handleRemove = id => {
     const updatedProducts = products.filter(p => p._id !== id);
@@ -188,7 +198,7 @@ const Cart = () => {
           </Card>
           <div className="p-col"></div>
           <Card className="p-col-12" style={{ boxShadow: "unset" }}>
-            Sponsored for you{" "}
+            Sponsored for you
           </Card>
           {sponsored.map(p => sponsoredTemplate(p))}
         </Card>
