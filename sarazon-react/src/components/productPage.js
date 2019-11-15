@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Rating } from "primereact/rating";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { Fieldset } from "primereact/fieldset";
+import { Growl } from "primereact/growl";
 import { getProduct } from "../services/productService";
+import { addProductToCart } from "../services/cartService";
+import { showMessage } from "./../utils";
 
 const ProductPage = props => {
   const [product, setProduct] = useState({});
   const [stars, setStars] = useState(0);
-  const [selectedQuantity, setSelectedQuantity] = useState(0);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  const growl = useRef();
 
   useEffect(() => {
     loadProduct();
@@ -21,16 +26,20 @@ const ProductPage = props => {
     setProduct(data);
   };
 
-  const { image, name, description, price, numberInStock } = product;
+  const { _id, image, name, description, price, numberInStock } = product;
   const quantities = [];
 
   for (let i = 1; i <= numberInStock; i++) {
     quantities.push({ label: `${i}`, value: i });
   }
 
-  const handleAddToCart = () => {
-    // PUT CALL WITH PRODUCT ID AND SELECTEDQUANTITY
-    console.log("Add product to cart");
+  const handleAddToCart = async () => {
+    const { data } = await addProductToCart({
+      _id: _id,
+      selectedQuantity: selectedQuantity
+    });
+    if (data === "Update successfull")
+      showMessage(growl, "success", "Product added to cart!");
   };
 
   const renderCard = (content, title) => (
@@ -56,6 +65,7 @@ const ProductPage = props => {
 
   return (
     <div className="p-grid p-justify-center" style={{ padding: "1em" }}>
+      <Growl ref={el => (growl.current = el)} />
       {renderCard(<img src={image} alt={name} />)}
       {renderCard(
         <>

@@ -6,8 +6,7 @@ axios.interceptors.response.use(null, error => {
     error.response.status >= 400 &&
     error.response.status < 500;
   if (!expectedError) {
-    console.log(error);
-    // SHOW TOAST MESSAGE WITH ERROR?
+    // SHOW TOAST MESSAGE WITH ERROR
     console.log(error);
   }
   return Promise.reject(error);
