@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const validateObjectId = require("../middleware/validateObjectId");
 const { Product, validate } = require("../models/product");
 const { Category } = require("../models/category");
 
@@ -32,7 +33,7 @@ router.get("/", async (req, res) => {
   res.send(products);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) return res.status(404).send("Product not found");
   res.send(product);
@@ -67,7 +68,7 @@ router.post("/", [auth, admin], async (req, res) => {
   res.send(product);
 });
 
-router.put("/:id", [auth, admin], async (req, res) => {
+router.put("/:id", [auth, admin, validateObjectId], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   const {
@@ -99,7 +100,7 @@ router.put("/:id", [auth, admin], async (req, res) => {
   res.send(product);
 });
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", [auth, admin, validateObjectId], async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
   if (!product) return res.status(404).send("Product not found");
   res.send(product);
