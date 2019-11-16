@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const { categorySchema } = require("./category");
 
 const productSchema = new mongoose.Schema({
@@ -10,10 +11,6 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: categorySchema,
-    required: true
-  },
-  image: {
-    type: String,
     required: true
   },
   price: {
@@ -42,7 +39,6 @@ const joiProductSchema = Joi.object({
     .min(20)
     .max(2000)
     .required(),
-  image: Joi.string().required(),
   price: Joi.number()
     .min(3)
     .required(),
