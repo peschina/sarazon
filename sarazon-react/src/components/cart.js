@@ -6,7 +6,7 @@ import { Dropdown } from "primereact/dropdown";
 import { cartProducts } from "./../fakeProductService";
 import { getSponsoredProducts } from "./../services/productService";
 
-const Cart = () => {
+const Cart = props => {
   const [products, setProducts] = useState(cartProducts);
   const [sponsored, setSponsored] = useState(cartProducts);
 
@@ -40,7 +40,9 @@ const Cart = () => {
     // save changes in db
   };
 
-  const handleCheckout = () => console.log("proceed to checkout");
+  const handleCheckout = () => {
+    props.history.push("/checkout");
+  };
 
   const itemTemplate = ({
     _id,
