@@ -108,6 +108,8 @@ const Home = () => {
           value={products}
           itemTemplate={productTemplate}
           responsiveOptions={responsiveSettings}
+          numVisible={3}
+          numScroll={3}
           header={customHeader(`Latest products in ${categoryName}`)}
         ></Carousel>
       </Card>
@@ -120,6 +122,8 @@ const Home = () => {
           value={categories}
           itemTemplate={categoryTemplate}
           responsiveOptions={responsiveSettings}
+          numVisible={3}
+          numScroll={3}
           header={customHeader("Explore by category")}
           circular={true}
           autoplayInterval={3000}
