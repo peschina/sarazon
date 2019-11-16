@@ -22,23 +22,23 @@ const Navbar = ({ user }) => {
     {
       label: user ? "Personal area" : "Login",
       url: user ? null : "/login",
-      icon: user? "pi pi-user" : "pi pi-sign-in",
+      icon: user ? "pi pi-user" : "pi pi-sign-in",
       items: user
         ? [
             {
               label: "Profile",
               url: "/profile",
-		      icon: "pi pi-user-edit",
+              icon: "pi pi-user-edit"
             },
             {
               label: "Orders",
               url: "/orders",
-		      icon: "pi pi-file"
+              icon: "pi pi-file"
             },
             {
               label: "Wishlist",
               url: "/wishlist",
-		      icon: "pi pi-bookmark"
+              icon: "pi pi-bookmark"
             },
             {
               label: "Logout",
@@ -49,14 +49,9 @@ const Navbar = ({ user }) => {
         : null
     },
     {
-      label: "About",
-      url: "/about",
-	  icon: "pi pi-info",
-    },
-    {
       label: "Contacts",
       url: "/contact",
-	  icon: "pi pi-question",
+      icon: "pi pi-info"
     }
   ];
 
@@ -67,21 +62,18 @@ const Navbar = ({ user }) => {
   ];
 
   return (
-        <div
-          className="p-grid p-justify-between"
-          style={{ marginBottom: "1em" }}
-        >
-          <Menubar
-            model={logo}
-            className="p-col-12 ui-menubar-custom"
-            style={{ fontSize: "20px" }}
-          ></Menubar>
-          <Menubar
-            model={items}
-            className="p-col-12"
-            style={{ textAlign: "center" }}
-          ></Menubar>
-        </div>
+    <div className="p-grid p-justify-between" style={{ marginBottom: "1em" }}>
+      <Menubar
+        model={logo}
+        className="p-col-12 ui-menubar-custom"
+        style={{ fontSize: "20px" }}
+      ></Menubar>
+      <Menubar
+        model={items}
+        className="p-col-12"
+        style={{ textAlign: "center" }}
+      ></Menubar>
+    </div>
   );
 };
 
