@@ -17,6 +17,8 @@ app.use(express.static(publicDir));
 app.get("/", (req, res) => res.send("This is sarazon homepage"));
 
 const port = process.env.PORT || 3090;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   winston.info(`listening on port ${port}`);
 });
+
+module.exports = server;
