@@ -4,7 +4,7 @@ Sarazon is a simple e-commerce app inspired by Amazon.
 
 ## Motivation
 
-This is a didactic project I started to practice with the React/Node/Mongo stack. It's been also a good chance to implement routing with ReactRouter and try out PrimeReact UI framework.
+This is a didactic project I started to practice with the MERN stack (MongoDB, Express, React.js, Node.js). It's been also a good chance to implement routing with ReactRouter and try out PrimeReact UI framework.
 The project is currently still in progress.
 
 ## Setup
