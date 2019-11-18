@@ -3,6 +3,7 @@ const { Product } = require("./models/product");
 const mongoose = require("mongoose");
 const beautyProducts = require("./data-import/beauty");
 const books = require("./data-import/books");
+const electronicsProducts = require("./data-import/electronics");
 
 const data = [
   {
@@ -15,7 +16,7 @@ const data = [
   },
   {
     name: "Electronics",
-    products: []
+    products: electronicsProducts
   },
   {
     name: "Home & Kitchen",

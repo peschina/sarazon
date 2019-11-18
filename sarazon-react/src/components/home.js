@@ -82,19 +82,18 @@ const Home = () => {
     </Link>
   );
 
-  const productTemplate = ({ _id, name, image, price }) => (
+  const productTemplate = ({ _id, name, category, price }) => (
     <Link to={`/product/${_id}`} className="p-grid p-nogutter">
       <div className="p-col-12">
         <div style={{ fontWeight: "bold", textAlign: "center" }}>{name}</div>
       </div>
-      <div className="p-col-12">
+      <div className="p-col-12" style={{ textAlign: "center" }}>
         <img
-          src={image}
+          src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
           alt={name}
-          style={{ maxWidth: "100%", height: "auto" }}
+          style={{ maxWidth: "100%", height: "200px" }}
         />
       </div>
-      <div className="p-col-12">{price}</div>
     </Link>
   );
 
