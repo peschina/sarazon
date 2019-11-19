@@ -4,7 +4,7 @@ import { apiEndpoint } from "../config.json";
 const apiUrl = `${apiEndpoint}/products`;
 
 export function getProducts() {
-  return http.get(`${apiUrl}`);
+  return http.get(apiUrl);
 }
 
 export function getProduct(id) {

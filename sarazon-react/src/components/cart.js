@@ -3,20 +3,26 @@ import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
-import { cartProducts } from "./../fakeProductService";
 import { getSponsoredProducts } from "./../services/productService";
+import { getCartProducts } from "./../services/cartService";
 
 const Cart = props => {
-  const [products, setProducts] = useState(cartProducts);
-  const [sponsored, setSponsored] = useState(cartProducts);
+  const [products, setProducts] = useState([]);
+  const [sponsored, setSponsored] = useState([]);
 
   useEffect(() => {
+    loadCartProducts();
     loadSponsoredProducts();
   }, []);
 
   const loadSponsoredProducts = async () => {
     const { data: products } = await getSponsoredProducts();
     setSponsored(products);
+  };
+
+  const loadCartProducts = async () => {
+    const { data } = await getCartProducts();
+    setProducts(data);
   };
 
   const handleRemove = id => {
@@ -41,13 +47,13 @@ const Cart = props => {
   };
 
   const handleCheckout = () => {
-    props.history.push("/checkout");
+    props.history.push("/checkout-address");
   };
 
   const itemTemplate = ({
     _id,
     name,
-    image,
+    category,
     price,
     numberInStock,
     selectedQuantity
@@ -62,9 +68,13 @@ const Cart = props => {
         <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
             <img
-              src={image}
+              src={
+                category
+                  ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
+                  : null
+              }
               alt={name}
-              style={{ maxWidth: "100%", height: "auto" }}
+              style={{ maxWidth: "100%", height: "200px" }}
             />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
@@ -107,14 +117,14 @@ const Cart = props => {
     );
   };
 
-  const sponsoredTemplate = ({ _id, name, image, price }) => (
+  const sponsoredTemplate = ({ _id, name, category, price }) => (
     <Card className="p-col-12 p-grid p-align-center" key={_id}>
       <div className="p-grid p-align-center">
         <Link to={`/product/${_id}`} className="p-col-5">
           <img
-            src={image}
+            src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
             alt={name}
-            style={{ maxWidth: "100%", height: "auto" }}
+            style={{ maxWidth: "100%", height: "100px" }}
           />
         </Link>
         <div className="p-grid p-col-7">
@@ -125,7 +135,6 @@ const Cart = props => {
           >
             {name}
           </Link>
-          <div className="p-col-12">Rating</div>
           <div className="p-col-12">€{price}</div>
           <div className="p-col-12">
             <Button
@@ -140,7 +149,7 @@ const Cart = props => {
 
   const totalAmount = () => {
     let amount = 0;
-    cartProducts.forEach(p => (amount = amount + parseInt(p.price)));
+    products.forEach(p => (amount = amount + parseInt(p.price)));
     return amount;
   };
 
@@ -160,7 +169,7 @@ const Cart = props => {
 
   return (
     <div className="p-grid p-justify-center">
-      <div className=" p-grid p-justify-center p-col-12 p-md-8 p-lg-7">
+      <div className="p-grid p-justify-center p-col-12 p-md-8 p-lg-7">
         <Card
           footer={footer}
           className="p-col-12"

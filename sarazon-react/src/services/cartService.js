@@ -3,6 +3,10 @@ import { apiEndpoint } from "../config.json";
 
 const apiUrl = `${apiEndpoint}/carts`;
 
+export function getCartProducts() {
+  return http.get(apiUrl);
+}
+
 export function addProductToCart(product) {
   const { _id, selectedQuantity } = product;
   // OR JUST PASS PRODUCT
