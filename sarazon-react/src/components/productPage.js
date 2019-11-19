@@ -26,7 +26,7 @@ const ProductPage = props => {
     setProduct(data);
   };
 
-  const { _id, image, name, description, price, numberInStock } = product;
+  const { _id, category, name, description, price, numberInStock } = product;
   const quantities = [];
 
   for (let i = 1; i <= numberInStock; i++) {
@@ -66,7 +66,17 @@ const ProductPage = props => {
   return (
     <div className="p-grid p-justify-center" style={{ padding: "1em" }}>
       <Growl ref={el => (growl.current = el)} />
-      {renderCard(<img src={image} alt={name} />)}
+      {renderCard(
+        <img
+          src={
+            category
+              ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
+              : null
+          }
+          alt={name}
+          style={{ maxWidth: "100%", height: "200px" }}
+        />
+      )}
       {renderCard(
         <>
           <div className="p-col">

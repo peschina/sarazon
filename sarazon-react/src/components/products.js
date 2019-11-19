@@ -69,16 +69,16 @@ const Products = props => {
 
   const itemTemplate = product => {
     if (!product) return null;
-    const { _id, name, image, price } = product;
+    const { _id, name, category, price } = product;
     return (
       <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
         <Panel header={name} style={{ textAlign: "center" }}>
           <img
-            src={image}
+            src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
             alt={name}
-            style={{ maxWidth: "100%", height: "auto" }}
+            style={{ maxWidth: "100%", height: "200px" }}
           />
-          <div>{price}</div>
+          <div>€ {price}</div>
         </Panel>
       </Link>
     );
