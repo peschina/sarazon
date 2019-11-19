@@ -13,7 +13,8 @@ import Cart from "./components/cart";
 import Contact from "./components/contact";
 import Wishlist from "./components/wishlist";
 import Orders from "./components/orders";
-import Checkout from "./components/checkout";
+import CheckoutAddress from "./components/checkoutAddress";
+import CheckoutPayment from "./components/checkoutPayment";
 import ProtectedRoute from "./components/protectedRoute";
 import auth from "./services/authService";
 
@@ -38,7 +39,8 @@ const App = () => {
           <ProtectedRoute path="/profile" component={Profile} />
           <ProtectedRoute path="/orders" component={Orders} />
           <ProtectedRoute path="/wishlist" component={Wishlist} />
-          <Route path="/checkout" component={Checkout} />
+          <Route path="/checkout-address" exact component={CheckoutAddress} />
+          <Route path="/checkout-payment" exact component={CheckoutPayment} />
           <Route path="/logout" component={Logout} />
           <Route path="/contact" component={Contact} />
           <Route path="/not-found" component={NotFound} />
