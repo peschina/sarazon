@@ -20,23 +20,27 @@ router.put("/", [auth], async (req, res) => {
 
   const token = req.header("x-auth-token");
   const userId = jwt.decode(token);
-  const user = await User.findById(userId);
 
-  const { _id: productId, selectedQuantity } = req.body;
-  const product = await Product.findById(productId);
-  if (!product) return res.status(404).send("Product not found");
-  const { _id, name, price, numberInStock } = product;
-  let cartProducts = user.cart.filter(p => !p._id.equals(product._id));
-  if (selectedQuantity !== 0) {
-    const cartProduct = {
-      _id: _id,
-      name: name,
-      price: price,
-      numberInStock: numberInStock,
-      selectedQuantity: selectedQuantity
-    };
-    cartProducts = [...cartProducts, cartProduct];
-  }
+  const { products } = req.body;
+  const cartProducts = await Promise.all(
+    products.map(async p => {
+      const {
+        _id,
+        name,
+        price,
+        numberInStock,
+        category
+      } = await Product.findById(p._id);
+      return {
+        _id,
+        name,
+        price,
+        numberInStock,
+        category,
+        selectedQuantity: p.selectedQuantity
+      };
+    })
+  );
 
   const { n, nModified } = await User.updateOne(
     { _id: userId },

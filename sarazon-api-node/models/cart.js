@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
+const { categorySchema } = require("./category");
 
 const cartProductSchema = new mongoose.Schema({
   name: {
@@ -12,20 +13,28 @@ const cartProductSchema = new mongoose.Schema({
     min: 3,
     required: true
   },
-  // IMAGE
   numberInStock: { type: Number, min: 0, required: true },
   selectedQuantity: {
     type: Number,
-    // MAX IS EQUAL TO NUMBERINSTOCK
     min: 1,
     default: 1
+  },
+  category: {
+    type: categorySchema,
+    required: true
   }
 });
 
 const joiCartSchema = Joi.object({
-  _id: Joi.objectId().required(),
-  selectedQuantity: Joi.number()
-    .min(0)
+  products: Joi.array()
+    .items(
+      Joi.object({
+        _id: Joi.objectId().required(),
+        selectedQuantity: Joi.number()
+          .min(1)
+          .required()
+      })
+    )
     .required()
 });
 
