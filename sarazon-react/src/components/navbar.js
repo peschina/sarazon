@@ -1,8 +1,11 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Menubar } from "primereact/menubar";
+import auth from "../services/authService";
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
+  const user = auth.getCurrentUser();
+
   const items = [
     {
       label: "Home",

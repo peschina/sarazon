@@ -7,8 +7,12 @@ export function getCartProducts() {
   return http.get(apiUrl);
 }
 
-export function addProductToCart(product) {
-  const { _id, selectedQuantity } = product;
-  // OR JUST PASS PRODUCT
-  return http.put(apiUrl, { _id, selectedQuantity });
+export function updateCart(products) {
+  const body = products.map(p => {
+    return {
+      _id: p._id,
+      selectedQuantity: p.selectedQuantity
+    };
+  });
+  return http.put(apiUrl, { products: body });
 }

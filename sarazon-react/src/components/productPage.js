@@ -6,18 +6,20 @@ import { Dropdown } from "primereact/dropdown";
 import { Fieldset } from "primereact/fieldset";
 import { Growl } from "primereact/growl";
 import { getProduct } from "../services/productService";
-import { addProductToCart } from "../services/cartService";
+import { updateCart } from "../services/cartService";
 import { showMessage } from "./../utils";
 
 const ProductPage = props => {
   const [product, setProduct] = useState({});
   const [stars, setStars] = useState(0);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [cart, setCart] = useState([]);
 
   const growl = useRef();
 
   useEffect(() => {
     loadProduct();
+    setCart(props.cart);
   }, []);
 
   const loadProduct = async () => {
@@ -26,7 +28,7 @@ const ProductPage = props => {
     setProduct(data);
   };
 
-  const { _id, category, name, description, price, numberInStock } = product;
+  const { category, name, description, price, numberInStock } = product;
   const quantities = [];
 
   for (let i = 1; i <= numberInStock; i++) {
@@ -34,10 +36,9 @@ const ProductPage = props => {
   }
 
   const handleAddToCart = async () => {
-    const { data } = await addProductToCart({
-      _id: _id,
-      selectedQuantity: selectedQuantity
-    });
+    props.handleAddProductToCart(product);
+    const allProducts = [{ ...product, selectedQuantity }, ...cart];
+    const { data } = await updateCart(allProducts);
     if (data === "Update successfull")
       showMessage(growl, "success", "Product added to cart!");
   };

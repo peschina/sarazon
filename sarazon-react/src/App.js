@@ -18,21 +18,39 @@ import CheckoutPayment from "./components/checkoutPayment";
 import CheckoutConfirmation from "./components/checkoutConfirmation";
 import ProtectedRoute from "./components/protectedRoute";
 import auth from "./services/authService";
+import { getCartProducts } from "./services/cartService";
 
 const App = () => {
-  const [user, setUser] = useState({});
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const user = auth.getCurrentUser();
-    setUser(user);
+    const loadCart = async () => {
+      const { data: products } = await getCartProducts();
+      setCart(products);
+    };
+    if (user) loadCart();
   }, []);
+
+  const handleAddProductToCart = product => {
+    setCart([cart.length === 0 ? product : product, ...cart]);
+  };
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
       <main>
         <Switch>
-          <Route path="/product/:id" component={ProductPage} />
+          <Route
+            path="/product/:id"
+            render={props => (
+              <ProductPage
+                cart={cart}
+                handleAddProductToCart={handleAddProductToCart}
+                {...props}
+              />
+            )}
+          />
           <Route path="/products" component={Products} />
           <Route path="/cart" component={Cart} />
           <Route path="/login" component={Login} />
