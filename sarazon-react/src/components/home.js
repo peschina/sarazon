@@ -123,9 +123,9 @@ const Home = () => {
           autoplayInterval={3000}
         ></Carousel>
       </Card>
-      {latestProductsCarousel(latestBooks, "Books")}
-      {latestProductsCarousel(latestElectronics, "Electronics")}
       {latestProductsCarousel(latestWomenFashion, "Women Fashion")}
+      {latestProductsCarousel(latestElectronics, "Electronics")}
+      {latestProductsCarousel(latestBooks, "Books")}
     </>
   );
 };

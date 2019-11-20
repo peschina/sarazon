@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 const beautyProducts = require("./data-import/beauty");
 const books = require("./data-import/books");
 const electronicsProducts = require("./data-import/electronics");
+const homeProducts = require("./data-import/home");
+const musicalInstruments = require("./data-import/music");
+const sportProducts = require("./data-import/sports");
+const toys = require("./data-import/toys");
+const fashion = require("./data-import/fashion");
 
 const data = [
   {
@@ -20,19 +25,23 @@ const data = [
   },
   {
     name: "Home & Kitchen",
-    products: []
+    products: homeProducts
   },
   {
     name: "Women Fashion",
-    products: []
+    products: fashion
   },
   {
     name: "Toys & Games",
-    products: []
+    products: toys
   },
   {
     name: "Music",
-    products: []
+    products: musicalInstruments
+  },
+  {
+    name: "Sport & Outdoors",
+    products: sportProducts
   }
 ];
 
