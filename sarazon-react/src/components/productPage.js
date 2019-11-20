@@ -36,9 +36,18 @@ const ProductPage = props => {
   }
 
   const handleAddToCart = async () => {
-    props.handleAddProductToCart(product);
-    const allProducts = [{ ...product, selectedQuantity }, ...cart];
-    const { data } = await updateCart(allProducts);
+    let allCartProducts = [{ ...product, selectedQuantity }, ...cart];
+    const alreadyPresentProduct = cart.filter(p => p._id === product._id)[0];
+    if (alreadyPresentProduct) {
+      allCartProducts = cart.map(p => {
+        if (p._id === product._id) {
+          p.selectedQuantity = selectedQuantity;
+        }
+        return p;
+      });
+    }
+    props.setCart(allCartProducts);
+    const { data } = await updateCart(allCartProducts);
     if (data === "Update successfull")
       showMessage(growl, "success", "Product added to cart!");
   };

@@ -32,10 +32,6 @@ const App = () => {
     if (user) loadCart();
   }, []);
 
-  const handleAddProductToCart = product => {
-    setCart([cart.length === 0 ? product : product, ...cart]);
-  };
-
   return (
     <>
       <Navbar />
@@ -44,11 +40,7 @@ const App = () => {
           <Route
             path="/product/:id"
             render={props => (
-              <ProductPage
-                cart={cart}
-                handleAddProductToCart={handleAddProductToCart}
-                {...props}
-              />
+              <ProductPage cart={cart} setCart={setCart} {...props} />
             )}
           />
           <Route path="/products" component={Products} />
