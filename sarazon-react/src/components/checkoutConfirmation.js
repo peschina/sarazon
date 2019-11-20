@@ -58,7 +58,6 @@ const CheckoutConfirmation = props => {
                 : null
             }
             alt={name}
-            style={{ maxWidth: "100%", height: "200px" }}
             className="p-col-4"
           />
           <div className="p-grid p-dir-col p-col-6">

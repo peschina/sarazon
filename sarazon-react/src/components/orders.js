@@ -15,7 +15,7 @@ const Orders = () => {
     //  setOrders(data);
     //};
     //loadData();
-	setOrders(allOrders);
+    setOrders(allOrders);
   }, []);
 
   const handleAddToCart = () => console.log("add to cart");
@@ -24,11 +24,7 @@ const Orders = () => {
     <Card className="p-col-12" style={{ boxShadow: "unset" }} key={_id}>
       <div className="p-grid p-col-12">
         <Link to={`/product/${_id}`} className="p-col-4 p-md-5 p-lg-5">
-          <img
-            src={image}
-            alt={name}
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
+          <img src={image} alt={name} />
         </Link>
         <div className="p-grid p-dir-col p-col">
           <Link

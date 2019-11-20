@@ -24,11 +24,7 @@ const Wishlist = () => {
       <Card className="p-col-12" key={_id}>
         <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
-            <img
-              src={image}
-              alt={name}
-              style={{ maxWidth: "100%", height: "auto" }}
-            />
+            <img src={image} alt={name} />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
             <Link

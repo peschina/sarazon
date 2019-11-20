@@ -74,7 +74,6 @@ const Cart = props => {
                   : null
               }
               alt={name}
-              style={{ maxWidth: "100%", height: "auto" }}
             />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
@@ -124,7 +123,6 @@ const Cart = props => {
           <img
             src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
             alt={name}
-            style={{ maxWidth: "100%", height: "auto" }}
           />
         </Link>
         <div className="p-grid p-col-7">
