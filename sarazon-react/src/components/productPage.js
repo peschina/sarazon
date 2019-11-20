@@ -75,7 +75,7 @@ const ProductPage = props => {
               : null
           }
           alt={name}
-          style={{ maxWidth: "100%", height: "200px" }}
+          style={{ maxWidth: "100%", height: "auto" }}
         />
       )}
       {renderCard(

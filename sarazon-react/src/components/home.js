@@ -76,7 +76,7 @@ const Home = () => {
         <img
           src={`http://localhost:3090/images/${name}.jpg`}
           alt={name}
-          style={{ maxWidth: "100%", height: "200px" }}
+          style={{ maxWidth: "100%", height: "auto" }}
         />
       </div>
     </Link>
@@ -91,7 +91,7 @@ const Home = () => {
         <img
           src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
           alt={name}
-          style={{ maxWidth: "100%", height: "200px" }}
+          style={{ maxWidth: "100%", height: "auto" }}
         />
       </div>
     </Link>
