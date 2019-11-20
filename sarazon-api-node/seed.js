@@ -40,7 +40,7 @@ const data = [
     products: musicalInstruments
   },
   {
-    name: "Sport & Outdoors",
+    name: "Sports & Outdoors",
     products: sportProducts
   }
 ];
