@@ -34,9 +34,7 @@ describe("/api/categories", () => {
 
   describe("GET /:id", () => {
     it("should return 404 if invalid id is passed", async () => {
-      const res = await request(server).get(
-        "/api/categories/5dade4463d2da71edc45df71"
-      );
+      const res = await request(server).get("/api/categories/1");
       expect(res.status).toBe(404);
     });
 
@@ -47,48 +45,64 @@ describe("/api/categories", () => {
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("name", category.name);
     });
+  });
 
-    describe("POST /", () => {
-      it("should return 401 if client is not logged in", async () => {
-        const res = await request(server)
-          .post("/api/categories")
-          .send({ name: "genre1" });
-        expect(res.status).toBe(401);
-      });
+  describe("POST /", () => {
+    let token;
+    let name;
 
-      it("should return 400 if input is less than 3 characters", async () => {
-        const token = new User({ isAdmin: true }).generateAuthToken();
+    const exec = async () => {
+      return await request(server)
+        .post("/api/categories")
+        .set("x-auth-token", token)
+        .send({ name });
+    };
 
-        const res = await request(server)
-          .post("/api/categories")
-          .set("x-auth-token", token)
-          .send({ name: "a" });
-        expect(res.status).toBe(400);
-      });
+    beforeEach(() => {
+      token = new User({ isAdmin: true }).generateAuthToken();
+      name = "category1";
+    });
 
-      it("should return 400 if input is less more than 50 characters", async () => {
-        const token = new User({ isAdmin: true }).generateAuthToken();
+    it("should return 401 if client is not logged in", async () => {
+      token = "";
+      const res = await exec();
 
-        const name = new Array(52).join("a");
+      expect(res.status).toBe(401);
+    });
 
-        const res = await request(server)
-          .post("/api/categories")
-          .set("x-auth-token", token)
-          .send({ name });
-        expect(res.status).toBe(400);
-      });
+    it("should return 403 if user is not admin", async () => {
+      token = new User().generateAuthToken();
+      const res = await exec();
 
-      it("should return 200 if input is valid", async () => {
-        const token = new User({ isAdmin: true }).generateAuthToken();
+      expect(res.status).toBe(403);
+    });
 
-        const res = await request(server)
-          .post("/api/categories")
-          .set("x-auth-token", token)
-          .send({ name: "genre1" });
-        expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty("_id");
-        expect(res.body).toHaveProperty("name", "genre1");
-      });
+    it("should return 400 if input is less than 3 characters", async () => {
+      name = "a";
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if input is less more than 50 characters", async () => {
+      name = new Array(52).join("a");
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should save the category if input is valid", async () => {
+      await exec();
+
+      const category = await Category.find({ name: "category1" });
+      expect(category).not.toBe(null);
+    });
+
+    it("should return the category if input is valid", async () => {
+      const res = await exec();
+
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("name", "category1");
     });
   });
 });
