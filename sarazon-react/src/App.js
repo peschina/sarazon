@@ -44,7 +44,11 @@ const App = () => {
             )}
           />
           <Route path="/products" component={Products} />
-          <Route path="/cart" component={Cart} />
+          <Route
+            path="/cart"
+            render={props => <Cart cart={cart} setCart={setCart} {...props} />}
+          />
+          />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <ProtectedRoute path="/profile" component={Profile} />

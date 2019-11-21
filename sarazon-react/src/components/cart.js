@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
+import { Growl } from "primereact/growl";
 import { getSponsoredProducts } from "./../services/productService";
 import { getCartProducts } from "./../services/cartService";
+import { updateCart } from "../services/cartService";
+import { showMessage } from "./../utils";
 
 const Cart = props => {
   const [products, setProducts] = useState([]);
   const [sponsored, setSponsored] = useState([]);
+
+  const growl = useRef();
 
   useEffect(() => {
     loadCartProducts();
@@ -25,16 +30,21 @@ const Cart = props => {
     setProducts(data);
   };
 
-  const handleRemove = id => {
+  const handleRemove = async id => {
     const updatedProducts = products.filter(p => p._id !== id);
+    console.log(updatedProducts);
+
+    const { data } = await updateCart(updatedProducts);
+    if (data === "Update successfull")
+      showMessage(growl, "success", "Product removed from cart!");
+
+    props.setCart(updatedProducts);
     setProducts(updatedProducts);
-    // save changes in db, send id of product and selectedQuantity: 0
   };
 
   const handleMove = id => {
-    const updatedProducts = products.filter(p => p._id !== id);
-    setProducts(updatedProducts);
-    // save changes in db, send id of product and selectedQuantity: 0
+    handleRemove(id);
+    // save changes in db to add product to wishlist
   };
 
   const handleProductQuantity = (value, id) => {
@@ -134,12 +144,6 @@ const Cart = props => {
             {name}
           </Link>
           <div className="p-col-12">€{price}</div>
-          <div className="p-col-12">
-            <Button
-              label="Add to cart"
-              onClick={() => console.log("Add to cart")}
-            ></Button>
-          </div>
         </div>
       </div>
     </Card>
@@ -167,6 +171,7 @@ const Cart = props => {
 
   return (
     <div className="p-grid p-justify-center">
+      <Growl ref={el => (growl.current = el)} />
       <div className="p-grid p-justify-center p-col-12 p-md-8 p-lg-7">
         <Card
           footer={footer}
