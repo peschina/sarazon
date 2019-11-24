@@ -3,7 +3,6 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
-import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import validate from "../validation/registerForm";
 import * as userService from "../services/userService";
@@ -16,8 +15,6 @@ const Register = props => {
   const [password, setPassword] = useState("");
   const [c_password, setC_password] = useState("");
   const [errors, setErrors] = useState({});
-
-  const growl = useRef();
 
   const errorsRef = useRef(errors);
 
@@ -47,6 +44,7 @@ const Register = props => {
       let errs = { ...errorsRef };
       error.details.map(i => (errs[i.path[0]] = i.message));
       setErrors(errs);
+      return;
     }
     try {
       const response = await userService.register({
@@ -59,6 +57,11 @@ const Register = props => {
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         let errs = { ...errorsRef };
+        if (typeof ex.response.data === "object") {
+          errs.password = ex.response.data.password;
+          setErrors(errs);
+          return;
+        }
         errs.username = ex.response.data;
         setErrors(errs);
       }
@@ -88,7 +91,6 @@ const Register = props => {
   return (
     <>
       <div className="p-grid p-justify-center">
-        <Growl ref={el => (growl.current = el)} />
         <div className="p-col-12 p-md-8 p-lg-4">
           <Card
             className="p-fluid"

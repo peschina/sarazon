@@ -10,20 +10,21 @@ router.get("/me", auth, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { error: pwError } = validatePassword(req.body.password);
-  if (pwError) return res.status(400).send(pwError.details[0].message);
+  const { username, email, password } = req.body;
+  const { error: pwError } = validatePassword(password);
+  if (pwError)
+    return res.status(400).send({ password: pwError.details[0].message });
   const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  let user = await User.findOne({ email: req.body.email });
+  let user = await User.findOne({ email });
   if (user) return res.status(400).send("Invalid email or password");
-  const { username, email, password } = req.body;
   user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password
+    username,
+    email,
+    password
   });
   const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(req.body.password, salt);
+  user.password = await bcrypt.hash(password, salt);
   await user.save();
   const token = user.generateAuthToken();
   res

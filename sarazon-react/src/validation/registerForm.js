@@ -10,12 +10,10 @@ const schema = Joi.object({
     .required(),
   c_email: Joi.ref("email"),
   password: Joi.string()
-    .min(5)
-    .max(12)
+    .min(8)
     .required(),
   c_password: Joi.ref("password")
 });
 
 const validate = obj => schema.validate(obj, { abortEarly: false });
-
 export default validate;
