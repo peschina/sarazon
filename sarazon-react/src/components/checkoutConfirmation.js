@@ -61,9 +61,7 @@ const CheckoutConfirmation = props => {
             className="p-col-4"
           />
           <div className="p-grid p-dir-col p-col-6">
-            <div className="p-col" style={{ fontWeight: "bold" }}>
-              {price}
-            </div>
+            <div className="p-col bold">{price}</div>
             <div className="p-col">
               <Dropdown
                 value={selectedQuantity}
@@ -103,7 +101,7 @@ const CheckoutConfirmation = props => {
       </div>
       <div className="p-grid p-justify-center p-align-center p-col-12 p-md-4 p-lg-3">
         <Card className="p-grid p-justify-center p-col-12">
-          <div className="p-col-12" style={{ fontWeight: "bold" }}>
+          <div className="p-col-12 bold">
             {`Subtotal (${products.length} items): €${totalAmount()}`}
           </div>
           <div className="p-col-12">
