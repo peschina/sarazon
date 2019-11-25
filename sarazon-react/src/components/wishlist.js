@@ -27,11 +27,7 @@ const Wishlist = () => {
             <img src={image} alt={name} />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
-            <Link
-              to={`/product/${_id}`}
-              className="p-col"
-              style={{ fontWeight: "bold" }}
-            >
+            <Link to={`/product/${_id}`} className="p-col bold">
               {name}
             </Link>
             <div className="p-col"></div>
@@ -63,10 +59,7 @@ const Wishlist = () => {
     <div className="p-grid p-justify-center">
       <Card className="p-col-12 p-md-10 p-lg-8" style={{ boxShadow: "unset" }}>
         <div className="p-grid p-col-12">
-          <div
-            className="p-col-11"
-            style={{ textAlign: "left", fontWeight: "bold" }}
-          >
+          <div className="p-col-11 bold" style={{ textAlign: "left" }}>
             {"Wishlist"}
           </div>
           <div className="p-col-1" style={{ textAlign: "right" }}>

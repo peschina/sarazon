@@ -27,11 +27,7 @@ const Orders = () => {
           <img src={image} alt={name} />
         </Link>
         <div className="p-grid p-dir-col p-col">
-          <Link
-            to={`/product/${_id}`}
-            className="p-col"
-            style={{ fontWeight: "bold" }}
-          >
+          <Link to={`/product/${_id}`} className="p-col bold">
             {name}
           </Link>
           <div className="p-col">{price}</div>
@@ -91,10 +87,7 @@ const Orders = () => {
     <div className="p-grid p-justify-center">
       <Card className="p-col-12 p-md-10 p-lg-8" style={{ boxShadow: "unset" }}>
         <div className="p-grid p-col-12">
-          <div
-            className="p-col-11"
-            style={{ textAlign: "left", fontWeight: "bold" }}
-          >
+          <div className="p-col-11 bold" style={{ textAlign: "left" }}>
             {"My orders"}
           </div>
         </div>

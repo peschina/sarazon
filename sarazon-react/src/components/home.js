@@ -70,20 +70,24 @@ const Home = () => {
       className="p-grid p-nogutter"
     >
       <div className="p-col-12">
-        <div style={{ fontWeight: "bold", textAlign: "center" }}>{name}</div>
+        <div className="bold textCenter" style={{ marginBottom: "1em" }}>
+          {name}
+        </div>
       </div>
-      <div className="p-col-12" style={{ textAlign: "center" }}>
+      <div className="p-col-12 textCenter">
         <img src={`http://localhost:3090/images/${name}.jpg`} alt={name} />
       </div>
     </Link>
   );
 
-  const productTemplate = ({ _id, name, category, price }) => (
+  const productTemplate = ({ _id, name, category }) => (
     <Link to={`/product/${_id}`} className="p-grid p-nogutter">
       <div className="p-col-12">
-        <div style={{ fontWeight: "bold", textAlign: "center" }}>{name}</div>
+        <div className="bold textCenter" style={{ marginBottom: "1em" }}>
+          {name}
+        </div>
       </div>
-      <div className="p-col-12" style={{ textAlign: "center" }}>
+      <div className="p-col-12 textCenter">
         <img
           src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
           alt={name}
@@ -92,7 +96,7 @@ const Home = () => {
     </Link>
   );
 
-  const customHeader = text => <h2 style={{ textAlign: "center" }}>{text}</h2>;
+  const customHeader = text => <h2 className="textCenter">{text}</h2>;
 
   const latestProductsCarousel = (products, categoryName) => {
     if (!products || products.length === 0) return;

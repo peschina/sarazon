@@ -72,7 +72,7 @@ const Products = props => {
     const { _id, name, category, price } = product;
     return (
       <Link to={`/product/${_id}`} className="p-col-6 p-md-4 p-lg-4">
-        <Panel header={name} style={{ textAlign: "center" }}>
+        <Panel header={name} className="textCenter">
           <img
             src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
             alt={name}

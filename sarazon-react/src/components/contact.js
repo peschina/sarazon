@@ -57,8 +57,8 @@ const Contact = () => {
         <Growl ref={el => (growl.current = el)} />
         <div className="p-col-12 p-md-8 p-lg-5">
           <Card
-            className="p-fluid"
-            style={{ padding: "2em", textAlign: "center" }}
+            className="p-fluid textCenter"
+            style={{ padding: "2em" }}
             title="Contact us"
           >
             <div className="p-grid p-justify-center">

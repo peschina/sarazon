@@ -46,3 +46,11 @@ img {
 .hidden {
   display: none;
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.textCenter {
+  text-align: center;
+}

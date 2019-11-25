@@ -71,11 +71,7 @@ const Navbar = () => {
         className="p-col-12 ui-menubar-custom"
         style={{ fontSize: "20px" }}
       ></Menubar>
-      <Menubar
-        model={items}
-        className="p-col-12"
-        style={{ textAlign: "center" }}
-      ></Menubar>
+      <Menubar model={items} className="p-col-12 textCenter"></Menubar>
     </div>
   );
 };

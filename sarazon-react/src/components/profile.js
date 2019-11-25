@@ -77,9 +77,7 @@ const Profile = () => {
     <Card className="p-col">
       <div className="p-grid p-col-12">
         <div className="p-col-9">
-          <div className="p-col" style={{ fontWeight: "bold" }}>
-            {label}:
-          </div>
+          <div className="p-col bold">{label}:</div>
           <div className="p-col">{value}</div>
         </div>
         <div className="p-col-3">
@@ -107,7 +105,7 @@ const Profile = () => {
         </span>
       </div>
       <div className="p-col">
-        <label style={{ fontWeight: "bold" }}>{`New ${label}`}</label>
+        <label className="bold">{`New ${label}`}</label>
       </div>
       <div className="p-col">
         {label !== "password" ? (
@@ -122,7 +120,7 @@ const Profile = () => {
       {label !== "username" && (
         <>
           <div className="p-col">
-            <label style={{ fontWeight: "bold" }}>{`Confirm ${label}`}</label>
+            <label className="bold">{`Confirm ${label}`}</label>
           </div>
           <div className="p-col">
             {label === "email" ? (
