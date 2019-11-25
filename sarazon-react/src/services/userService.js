@@ -2,10 +2,10 @@ import http from "./httpServices";
 import { apiEndpoint } from "../config.json";
 const apiUrl = apiEndpoint + "/users";
 
-export function register(user) {
+export function register({ username, email, password }) {
   return http.post(apiUrl, {
-    username: user.username,
-    email: user.email,
-    password: user.password
+    username,
+    email,
+    password,
   });
 }

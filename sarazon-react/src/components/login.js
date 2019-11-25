@@ -28,7 +28,6 @@ const Login = props => {
       });
       return;
     }
-    console.log("call to server..., redirect");
     try {
       await auth.login(username, password);
       const { state } = props.location;

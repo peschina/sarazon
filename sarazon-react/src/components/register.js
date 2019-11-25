@@ -8,7 +8,7 @@ import validate from "../validation/registerForm";
 import * as userService from "../services/userService";
 import auth from "../services/authService";
 
-const Register = props => {
+const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [c_email, setC_email] = useState("");
@@ -48,9 +48,9 @@ const Register = props => {
     }
     try {
       const response = await userService.register({
-        username: username,
-        email: email,
-        password: password
+        username,
+        email,
+        password
       });
       auth.loginWithJwt(response.headers["x-auth-token"]);
       window.location = "/";

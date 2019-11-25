@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./components/home";
 import Login from "./components/login";
@@ -17,38 +17,16 @@ import CheckoutAddress from "./components/checkoutAddress";
 import CheckoutPayment from "./components/checkoutPayment";
 import CheckoutConfirmation from "./components/checkoutConfirmation";
 import ProtectedRoute from "./components/protectedRoute";
-import auth from "./services/authService";
-import { getCartProducts } from "./services/cartService";
 
 const App = () => {
-  const [cart, setCart] = useState([]);
-
-  useEffect(() => {
-    const user = auth.getCurrentUser();
-    const loadCart = async () => {
-      const { data: products } = await getCartProducts();
-      setCart(products);
-    };
-    if (user) loadCart();
-  }, []);
-
   return (
     <>
       <Navbar />
       <main>
         <Switch>
-          <Route
-            path="/product/:id"
-            render={props => (
-              <ProductPage cart={cart} setCart={setCart} {...props} />
-            )}
-          />
+          <Route path="/product/:id" component={ProductPage} />
           <Route path="/products" component={Products} />
-          <Route
-            path="/cart"
-            render={props => <Cart cart={cart} setCart={setCart} {...props} />}
-          />
-          />
+          <ProtectedRoute path="/cart" component={Cart} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <ProtectedRoute path="/profile" component={Profile} />

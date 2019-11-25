@@ -32,14 +32,10 @@ const Cart = props => {
 
   const handleRemove = async id => {
     const updatedProducts = products.filter(p => p._id !== id);
-    console.log(updatedProducts);
-
-    const { data } = await updateCart(updatedProducts);
-    if (data === "Update successfull")
-      showMessage(growl, "success", "Product removed from cart!");
-
-    props.setCart(updatedProducts);
     setProducts(updatedProducts);
+    const { status } = await updateCart(updatedProducts);
+    if (status === 200)
+      showMessage(growl, "success", "Product removed from cart!");
   };
 
   const handleMove = id => {
@@ -47,13 +43,14 @@ const Cart = props => {
     // save changes in db to add product to wishlist
   };
 
-  const handleProductQuantity = (value, id) => {
+  const handleProductQuantity = async (value, id) => {
     const updatedProducts = products.filter(p => {
       if (p._id === id) p.selectedQuantity = value;
       return p;
     });
     setProducts(updatedProducts);
-    // save changes in db
+    const { status } = await updateCart(updatedProducts);
+    if (status === 200) showMessage(growl, "success", "Cart updated!");
   };
 
   const handleCheckout = () => {
@@ -78,20 +75,12 @@ const Cart = props => {
         <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
             <img
-              src={
-                category
-                  ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
-                  : null
-              }
+              src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
               alt={name}
             />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
-            <Link
-              to={`/product/${_id}`}
-              className="p-col"
-              style={{ fontWeight: "bold" }}
-            >
+            <Link to={`/product/${_id}`} className="p-col bold">
               {name}
             </Link>
             <div className="p-col">
@@ -136,11 +125,7 @@ const Cart = props => {
           />
         </Link>
         <div className="p-grid p-col-7">
-          <Link
-            to={`/product/${_id}`}
-            className="p-col"
-            style={{ fontWeight: "bold" }}
-          >
+          <Link to={`/product/${_id}`} className="p-col bold">
             {name}
           </Link>
           <div className="p-col-12">€{price}</div>
@@ -151,7 +136,7 @@ const Cart = props => {
 
   const totalAmount = () => {
     let amount = 0;
-    products.forEach(p => (amount = amount + parseInt(p.price)));
+    products.forEach(p => (amount = amount + p.price));
     return amount;
   };
 
@@ -160,10 +145,7 @@ const Cart = props => {
       <div className="p-col-11" style={{ textAlign: "left" }}>
         {"Total"}
       </div>
-      <div
-        className="p-col-1"
-        style={{ textAlign: "right", fontWeight: "bold" }}
-      >
+      <div className="p-col-1 bold" style={{ textAlign: "right" }}>
         €{totalAmount()}
       </div>
     </div>
@@ -180,11 +162,10 @@ const Cart = props => {
         >
           <div className="p-grid p-col-12" style={{ padding: "2em" }}>
             <div
-              className="p-col-11"
+              className="p-col-11 bold"
               style={{
                 textAlign: "left",
-                fontSize: "20px",
-                fontWeight: "bold"
+                fontSize: "20px"
               }}
             >
               {"Cart"}
@@ -200,7 +181,7 @@ const Cart = props => {
         <Card className="p-col-12" style={{ boxShadow: "unset" }}>
           <div className="p-col"></div>
           <Card className="p-grid p-justify-center p-col-12">
-            <div className="p-col-12" style={{ fontWeight: "bold" }}>
+            <div className="p-col-12 bold">
               {`Subtotal (${products.length} items): €${totalAmount()}`}
             </div>
             <div className="p-col-12">
