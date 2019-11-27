@@ -14,31 +14,57 @@ describe("/api/products", () => {
     await Product.deleteMany({});
   });
 
-  it("should return all products", async () => {
-    const category = new Category({ name: "category1" });
-    await category.save();
+  describe("GET /", () => {
+    const populateCategory = async () => {
+      return await new Category({ name: "category1" }).save();
+    };
 
-    await Product.collection.insertMany([
-      {
-        name: "product1",
-        price: "3",
-        categoryId: category._id,
+    const populateProduct = async (product, { _id, name }) => {
+      await new Product({
+        name: product,
+        price: 3,
+        category: { _id, name },
         description: new Array(21).join("a"),
-        numberInStock: "1"
-      },
-      {
-        name: "product2",
-        price: "3",
-        categoryId: category._id,
-        description: new Array(21).join("a"),
-        numberInStock: "1"
-      }
-    ]);
+        numberInStock: 1
+      }).save();
+    };
 
-    const res = await request(server).get("/api/products");
-    expect(res.status).toBe(200);
-    expect(res.body.length).toBe(2);
-    expect(res.body.some(c => c.name === "product1")).toBeTruthy();
-    expect(res.body.some(c => c.name === "product2")).toBeTruthy();
+    const productObject = (product, { _id, name }) => {
+      return {
+        name: product,
+        price: 3,
+        category: { _id: _id.toHexString(), name },
+        description: new Array(21).join("a"),
+        numberInStock: 1
+      };
+    };
+
+    it("should return all products", async () => {
+      const category = await populateCategory();
+      await populateProduct("product1", category);
+      await populateProduct("product2", category);
+      const res = await request(server).get("/api/products");
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(2);
+      expect(res.body[0]).toMatchObject(productObject("product1", category));
+      expect(res.body[1]).toMatchObject(productObject("product2", category));
+    });
+
+    it("should return last 3 added products", async () => {
+      const category = await populateCategory();
+      await populateProduct("product1", category);
+      await populateProduct("product2", category);
+      await populateProduct("product3", category);
+      await populateProduct("product4", category);
+
+      const res = await request(server)
+        .get("/api/products")
+        .query({ sponsored: true });
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(3);
+      expect(res.body[0]).toMatchObject(productObject("product1", category));
+      expect(res.body[1]).toMatchObject(productObject("product2", category));
+      expect(res.body[2]).toMatchObject(productObject("product3", category));
+    });
   });
 });
