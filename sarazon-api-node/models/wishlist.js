@@ -12,11 +12,16 @@ const wishlistProductSchema = new mongoose.Schema({
     min: 3,
     required: true
   }
-  // IMAGE
 });
 
 const joiWishlistSchema = Joi.object({
-  _id: Joi.objectId().required()
+  products: Joi.array()
+    .items(
+      Joi.object({
+        _id: Joi.objectId().required()
+      })
+    )
+    .required()
 });
 
 const validate = wishlist => joiWishlistSchema.validate(wishlist);

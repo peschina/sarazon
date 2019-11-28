@@ -21,25 +21,20 @@ router.put("/", [auth], async (req, res) => {
   const userId = jwt.decode(token);
   const user = await User.findById(userId);
 
-  const product = await Product.findById(req.body._id);
-  if (!product) return res.status(404).send("Product not found");
-  const { _id, name, price } = product;
-  const newProduct = {
-    _id: _id,
-    name: name,
-    price: price
-  };
-
-  const toBeRemoved = user.wishlist.filter(p => p._id.equals(newProduct._id));
-  const wishlist =
-    toBeRemoved.length === 0
-      ? [...user.wishlist, newProduct]
-      : user.wishlist.filter(p => !p._id.equals(newProduct._id));
-
-  const { n, nModified } = await User.updateOne(
-    { _id: userId },
-    { wishlist: wishlist }
+  const { products } = req.body;
+  const wishlist = await Promise.all(
+    products.map(async p => {
+      const { _id, name, price, category } = await Product.findById(p._id);
+      return {
+        _id,
+        name,
+        price,
+        category
+      };
+    })
   );
+  const { n, nModified } = await User.updateOne({ _id: userId }, { wishlist });
+  console.log(user.wishlist);
 
   res.send(
     n && nModified
