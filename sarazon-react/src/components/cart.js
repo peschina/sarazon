@@ -5,19 +5,21 @@ import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { Growl } from "primereact/growl";
 import { getSponsoredProducts } from "./../services/productService";
-import { getCartProducts } from "./../services/cartService";
-import { updateCart } from "../services/cartService";
+import { getCartProducts, updateCart } from "./../services/cartService";
+import { getWishlist, updateWishlist } from "../services/wishlistService";
 import { showMessage } from "./../utils";
 
 const Cart = props => {
   const [products, setProducts] = useState([]);
   const [sponsored, setSponsored] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   const growl = useRef();
 
   useEffect(() => {
     loadCartProducts();
     loadSponsoredProducts();
+    loadWishlist();
   }, []);
 
   const loadSponsoredProducts = async () => {
@@ -30,6 +32,11 @@ const Cart = props => {
     setProducts(data);
   };
 
+  const loadWishlist = async () => {
+    const { data: products } = await getWishlist();
+    setWishlist(products);
+  };
+
   const handleRemove = async id => {
     const updatedProducts = products.filter(p => p._id !== id);
     setProducts(updatedProducts);
@@ -38,9 +45,14 @@ const Cart = props => {
       showMessage(growl, "success", "Product removed from cart!");
   };
 
-  const handleMove = id => {
-    handleRemove(id);
-    // save changes in db to add product to wishlist
+  const handleMove = async id => {
+    const product = products.filter(p => p._id === id)[0];
+    const newWishlist = [...wishlist, product];
+    const { status } = await updateWishlist(newWishlist);
+    if (status === 200) {
+      showMessage(growl, "success", "Product moved to wishlist!");
+      handleRemove(id);
+    }
   };
 
   const handleProductQuantity = async (value, id) => {

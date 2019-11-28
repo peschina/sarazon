@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { cartProducts } from "./../fakeProductService";
+import { getWishlist } from "./../services/wishlistService";
 
 const Wishlist = () => {
-  const [products, setProducts] = useState(cartProducts);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const { data } = await getWishlist();
+      setProducts(data);
+    };
+    loadProducts();
+  }, []);
 
   const handleRemove = id => {
     const updatedProducts = products.filter(p => p._id !== id);
@@ -19,12 +27,19 @@ const Wishlist = () => {
     // save changes in db
   };
 
-  const itemTemplate = ({ _id, name, image, price, numberInStock }) => {
+  const itemTemplate = ({ _id, name, category, price }) => {
     return (
       <Card className="p-col-12" key={_id}>
         <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
-            <img src={image} alt={name} />
+            <img
+              src={
+                category
+                  ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
+                  : null
+              }
+              alt={name}
+            />
           </Link>
           <div className="p-grid p-dir-col p-col-6">
             <Link to={`/product/${_id}`} className="p-col bold">
