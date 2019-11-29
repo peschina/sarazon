@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
+const { categorySchema } = require("./category");
 
 const wishlistProductSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,10 @@ const wishlistProductSchema = new mongoose.Schema({
   price: {
     type: Number,
     min: 3,
+    required: true
+  },
+  category: {
+    type: categorySchema,
     required: true
   }
 });

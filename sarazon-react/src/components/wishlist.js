@@ -33,11 +33,7 @@ const Wishlist = () => {
         <div className="p-grid p-align-center">
           <Link to={`/product/${_id}`} className="p-col-4">
             <img
-              src={
-                category
-                  ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
-                  : null
-              }
+              src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
               alt={name}
             />
           </Link>

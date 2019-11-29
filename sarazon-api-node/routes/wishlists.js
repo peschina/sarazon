@@ -19,10 +19,9 @@ router.put("/", [auth], async (req, res) => {
 
   const token = req.header("x-auth-token");
   const userId = jwt.decode(token);
-  const user = await User.findById(userId);
 
   const { products } = req.body;
-  const wishlist = await Promise.all(
+  const wishlistProducts = await Promise.all(
     products.map(async p => {
       const { _id, name, price, category } = await Product.findById(p._id);
       return {
@@ -33,8 +32,10 @@ router.put("/", [auth], async (req, res) => {
       };
     })
   );
-  const { n, nModified } = await User.updateOne({ _id: userId }, { wishlist });
-  console.log(user.wishlist);
+  const { n, nModified } = await User.updateOne(
+    { _id: userId },
+    { wishlist: wishlistProducts }
+  );
 
   res.send(
     n && nModified
