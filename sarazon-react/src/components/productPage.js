@@ -66,9 +66,11 @@ const ProductPage = props => {
         return p;
       });
     }
-    setCart(allCartProducts);
     const { status } = await updateCart(allCartProducts);
-    if (status === 200) showMessage(growl, "success", "Product added to cart!");
+    if (status === 200) {
+      showMessage(growl, "success", "Product added to cart!");
+      setCart(allCartProducts);
+    }
   };
 
   const renderCard = (content, title) => (

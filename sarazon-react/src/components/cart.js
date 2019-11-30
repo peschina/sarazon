@@ -47,7 +47,13 @@ const Cart = props => {
 
   const handleMove = async id => {
     const product = products.filter(p => p._id === id)[0];
+
     const newWishlist = [...wishlist, product];
+    const alreadyPresentProduct = wishlist.filter(p => p._id === id)[0];
+    if (alreadyPresentProduct) {
+      showMessage(growl, "success", "Product already saved in wishlist!");
+      return;
+    }
     const { status } = await updateWishlist(newWishlist);
     if (status === 200) {
       showMessage(growl, "success", "Product moved to wishlist!");
