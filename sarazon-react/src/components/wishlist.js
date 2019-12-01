@@ -48,7 +48,7 @@ const Wishlist = () => {
       showMessage(growl, "success", "Product added to cart!");
       setCart(allCartProducts);
     }
-    handleRemove();
+    handleRemove(id);
   };
 
   const itemTemplate = ({ _id, name, category, price }) => {
