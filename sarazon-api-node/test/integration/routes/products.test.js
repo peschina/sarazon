@@ -45,7 +45,11 @@ describe("/api/products", () => {
       await populateProduct("product2", category);
       const res = await request(server).get("/api/products");
       expect(res.body.length).toBe(2);
+      expect(res.body[0]).toHaveProperty("_id");
+      expect(res.body[0]).toHaveProperty("insertionDate");
       expect(res.body[0]).toMatchObject(productObject("product1", category));
+      expect(res.body[1]).toHaveProperty("_id");
+      expect(res.body[1]).toHaveProperty("insertionDate");
       expect(res.body[1]).toMatchObject(productObject("product2", category));
     });
 
@@ -129,4 +133,19 @@ describe("/api/products", () => {
       expect(res.body[2]).toMatchObject(productObject("product3", category));
     });
   });
-});
+
+  describe("GET /:id", () => {
+    it("should return 404 if invalid id is passed", async () => {
+      const res = await request(server).get("/api/products/1");
+      expect(res.status).toBe(404);
+    });
+
+    it("should return the product if valid id is passed", async () => {
+      const category = await populateCategory("category1");
+      const product = await populateProduct("product1", category);
+
+      const res = await request(server).get(`/api/products/${product._id}`);
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject(productObject("product1", category));
+    });
+  });

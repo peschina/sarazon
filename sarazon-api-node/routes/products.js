@@ -50,14 +50,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
 router.post("/", [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  const {
-    name,
-    price,
-    categoryId,
-    image,
-    description,
-    numberInStock
-  } = req.body;
+  const { name, price, categoryId, description, numberInStock } = req.body;
 
   const category = await Category.findById(categoryId);
   if (!category) return res.status(404).send("Invalid genre");
@@ -68,7 +61,6 @@ router.post("/", [auth, admin], async (req, res) => {
       _id: category._id,
       name: category.name
     },
-    image,
     description,
     numberInStock
   });
@@ -79,14 +71,7 @@ router.post("/", [auth, admin], async (req, res) => {
 router.put("/:id", [auth, admin, validateObjectId], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  const {
-    name,
-    price,
-    categoryId,
-    image,
-    description,
-    numberInStock
-  } = req.body;
+  const { name, price, categoryId, description, numberInStock } = req.body;
   const category = await Category.findById(categoryId);
   if (!category) return res.status(404).send("Invalid genre");
   const product = await Product.findByIdAndUpdate(
@@ -98,7 +83,6 @@ router.put("/:id", [auth, admin, validateObjectId], async (req, res) => {
         _id: category._id,
         name: category.name
       },
-      image,
       description,
       numberInStock
     },

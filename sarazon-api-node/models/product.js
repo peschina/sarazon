@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema({
     maxlength: 2000
   },
   numberInStock: { type: Number, min: 0, required: true },
-  insertionDate: { type: Date, default: new Date().toLocaleDateString() }
+  insertionDate: { type: String, default: new Date().toLocaleDateString() }
 });
 
 const Product = mongoose.model("Product", productSchema);
