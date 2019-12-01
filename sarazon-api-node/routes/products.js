@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
@@ -10,14 +11,18 @@ router.get("/", async (req, res) => {
   const { categoryId, latest, sponsored } = req.query;
   let products = await Product.find().sort("name");
   if (categoryId) {
+    if (!mongoose.Types.ObjectId.isValid(categoryId))
+      return res.status(404).send("Invalid ID");
     const category = await Category.findById(categoryId);
-    if (!category) return res.status(404).send("Invalid category");
+    if (!category) return res.status(404).send("Category not found");
     const { _id, name } = category;
 
     products = await Product.find({
       category: { _id, name }
     });
     if (latest) {
+      if (latest !== "true")
+        return res.status(400).send("Invalid parameter for latest products");
       products = await Product.find({
         category: { _id, name }
       })
@@ -25,7 +30,10 @@ router.get("/", async (req, res) => {
         .limit(2);
     }
   }
+  if (!categoryId && latest) return res.status(400).send("Invalid paremeter");
   if (sponsored) {
+    if (sponsored !== "true")
+      return res.status(400).send("Invalid parameter for sponsored products");
     products = await Product.find()
       .sort({ insertionDate: -1 })
       .limit(3);
