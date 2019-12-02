@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { Product } = require("../../../models/product");
 const { Category } = require("../../../models/category");
+const { User } = require("../../../models/user");
 
 let server;
 
@@ -146,6 +147,105 @@ describe("/api/products", () => {
 
       const res = await request(server).get(`/api/products/${product._id}`);
       expect(res.status).toBe(200);
+      expect(res.body).toMatchObject(productObject("product1", category));
+    });
+  });
+
+  describe("POST", () => {
+    let token, category, name, price, categoryId, description, numberInStock;
+
+    beforeEach(async () => {
+      token = new User({ isAdmin: true }).generateAuthToken();
+      category = await populateCategory("category1");
+      name = "product1";
+      price = 3;
+      categoryId = category._id.toHexString();
+      description = new Array(21).join("a");
+      numberInStock = 1;
+    });
+
+    const exec = async () => {
+      return await request(server)
+        .post("/api/products")
+        .set("x-auth-token", token)
+        .send({
+          name,
+          price,
+          categoryId,
+          description,
+          numberInStock
+        });
+    };
+
+    it("should return 401 if client is not logged in", async () => {
+      token = "";
+      const res = await exec();
+
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 403 if user is not admin", async () => {
+      token = new User().generateAuthToken();
+      const res = await exec();
+
+      expect(res.status).toBe(403);
+    });
+
+    it("should return 400 if name property of input is less than 2 characters", async () => {
+      name = "a";
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if categoryId property of input is not a valid id", async () => {
+      categoryId = "1";
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if value of price property of input is less than 3", async () => {
+      price = 2;
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if description property of input is less than 20 characters", async () => {
+      description = new Array(20).join("a");
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if description property of input is more than 2000 characters", async () => {
+      description = new Array(2002).join("a");
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if value of numberInStock property of input is negative", async () => {
+      numberInStock = -1;
+      const res = await exec();
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should save the product if input is valid", async () => {
+      await exec();
+
+      const product = await Product.find({ name: "product1" });
+      expect(product).not.toBe(null);
+    });
+
+    it("should return the product if input is valid", async () => {
+      const res = await exec();
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("insertionDate");
       expect(res.body).toMatchObject(productObject("product1", category));
     });
   });
