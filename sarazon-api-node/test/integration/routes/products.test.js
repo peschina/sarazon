@@ -349,3 +349,46 @@ describe("/api/products", () => {
       expect(res.body).toMatchObject(productObject("product2", category));
     });
   });
+
+  describe("DELETE /:id", () => {
+    let token, id;
+
+    beforeEach(async () => {
+      token = new User({ isAdmin: true }).generateAuthToken();
+      const category = await populateCategory("category1");
+      const product = await populateProduct("product1", category);
+      id = product._id;
+    });
+
+    const exec = async () => {
+      return await request(server)
+        .delete(`/api/products/${id}`)
+        .set("x-auth-token", token);
+    };
+
+    it("should return 401 if client is not logged in", async () => {
+      token = "";
+      const res = await exec();
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 403 if user is not admin", async () => {
+      token = new User().generateAuthToken();
+      const res = await exec();
+      expect(res.status).toBe(403);
+    });
+
+    it("should return 404 if invalid id is passed", async () => {
+      id = "1";
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
+
+    it("should delete the product if valid id is passed", async () => {
+      const res = await exec();
+      expect(res.status).toBe(200);
+      const product = Product.find({ name: "product1" });
+      expect(product.status).toBeUndefined();
+    });
+  });
+});
