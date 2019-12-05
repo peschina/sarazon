@@ -6,14 +6,34 @@ const { User } = require("../../../models/user");
 let server;
 
 describe("/api/products", () => {
-  beforeEach(() => {
+  let category, token;
+  beforeEach(async () => {
     server = require("../../../index");
+    category = await populateCategory("category1");
+    token = new User({ isAdmin: true }).generateAuthToken();
   });
   afterEach(async () => {
     server.close();
     await Category.deleteMany({});
     await Product.deleteMany({});
   });
+
+  const test401 = async f => {
+    token = "";
+    const res = await f();
+    expect(res.status).toBe(401);
+  };
+
+  const test403 = async f => {
+    token = new User().generateAuthToken();
+    const res = await f();
+    expect(res.status).toBe(403);
+  };
+
+  const test400 = async f => {
+    const res = await f();
+    expect(res.status).toBe(400);
+  };
 
   const populateCategory = async name => {
     return await new Category({ name }).save();
@@ -41,7 +61,6 @@ describe("/api/products", () => {
 
   describe("GET /", () => {
     it("should return all products", async () => {
-      const category = await populateCategory("category1");
       await populateProduct("product1", category);
       await populateProduct("product2", category);
       const res = await request(server).get("/api/products");
@@ -62,27 +81,24 @@ describe("/api/products", () => {
     });
 
     it("should return products with that category if valid category id is passed in query params", async () => {
-      const category1 = await populateCategory("category1");
       const category2 = await populateCategory("category2");
-      await populateProduct("product1", category1);
-      await populateProduct("product2", category1);
+      await populateProduct("product1", category);
+      await populateProduct("product2", category);
       await populateProduct("product3", category2);
 
       const res = await request(server)
         .get("/api/products")
-        .query({ categoryId: category1._id.toHexString() });
+        .query({ categoryId: category._id.toHexString() });
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(2);
-      expect(res.body[0]).toMatchObject(productObject("product1", category1));
-      expect(res.body[1]).toMatchObject(productObject("product2", category1));
+      expect(res.body[0]).toMatchObject(productObject("product1", category));
+      expect(res.body[1]).toMatchObject(productObject("product2", category));
     });
 
     it("should return 400 if valid category id and latest not set to true are passed in query params", async () => {
-      const category1 = await populateCategory("category1");
-
       const res = await request(server)
         .get("/api/products")
-        .query({ categoryId: category1._id.toHexString() })
+        .query({ categoryId: category._id.toHexString() })
         .query({ latest: "1" });
       expect(res.status).toBe(400);
     });
@@ -95,16 +111,15 @@ describe("/api/products", () => {
     });
 
     it("should return last 2 products with that category if valid category id and latest set to true are passed in query params", async () => {
-      const category1 = await populateCategory("category1");
       const category2 = await populateCategory("category2");
-      await populateProduct("product1", category1);
-      await populateProduct("product2", category1);
+      await populateProduct("product1", category);
+      await populateProduct("product2", category);
       await populateProduct("product3", category2);
-      await populateProduct("product4", category1);
+      await populateProduct("product4", category);
 
       const res = await request(server)
         .get("/api/products")
-        .query({ categoryId: category1._id.toHexString() })
+        .query({ categoryId: category._id.toHexString() })
         .query({ latest: true });
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(2);
@@ -118,7 +133,6 @@ describe("/api/products", () => {
     });
 
     it("should return last 3 added products if sponsored set to true is passed in query params", async () => {
-      const category = await populateCategory("category1");
       const names = ["product1", "product2", "product3", "product4"];
       await Promise.all(
         names.map(async n => {
@@ -142,7 +156,6 @@ describe("/api/products", () => {
     });
 
     it("should return the product if valid id is passed", async () => {
-      const category = await populateCategory("category1");
       const product = await populateProduct("product1", category);
 
       const res = await request(server).get(`/api/products/${product._id}`);
@@ -152,11 +165,9 @@ describe("/api/products", () => {
   });
 
   describe("POST", () => {
-    let token, category, name, price, categoryId, description, numberInStock;
+    let name, price, categoryId, description, numberInStock;
 
     beforeEach(async () => {
-      token = new User({ isAdmin: true }).generateAuthToken();
-      category = await populateCategory("category1");
       name = "product1";
       price = 3;
       categoryId = category._id.toHexString();
@@ -177,72 +188,50 @@ describe("/api/products", () => {
         });
     };
 
-    it("should return 401 if client is not logged in", async () => {
-      token = "";
-      const res = await exec();
+    it("should return 401 if client is not logged in", async () =>
+      await test401(exec));
 
-      expect(res.status).toBe(401);
-    });
-
-    it("should return 403 if user is not admin", async () => {
-      token = new User().generateAuthToken();
-      const res = await exec();
-
-      expect(res.status).toBe(403);
-    });
+    it("should return 403 if user is not admin", async () =>
+      await test403(exec));
 
     it("should return 400 if name property of input is less than 2 characters", async () => {
       name = "a";
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if categoryId property of input is not a valid id", async () => {
       categoryId = "1";
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if value of price property of input is less than 3", async () => {
       price = 2;
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if description property of input is less than 20 characters", async () => {
       description = new Array(20).join("a");
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if description property of input is more than 2000 characters", async () => {
       description = new Array(2002).join("a");
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if value of numberInStock property of input is negative", async () => {
       numberInStock = -1;
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should save the product if input is valid", async () => {
       await exec();
-
       const product = await Product.find({ name: "product1" });
       expect(product).not.toBe(null);
     });
 
     it("should return the product if input is valid", async () => {
       const res = await exec();
-
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("_id");
       expect(res.body).toHaveProperty("insertionDate");
@@ -251,20 +240,18 @@ describe("/api/products", () => {
   });
 
   describe("PUT /:id", () => {
-    let token, name, price, categoryId, description, numberInStock;
+    let name, price, categoryId, description, numberInStock;
 
     beforeEach(async () => {
-      token = new User({ isAdmin: true }).generateAuthToken();
-      category = await populateCategory("category2");
+      category2 = await populateCategory("category2");
       name = "product2";
       price = 3;
-      categoryId = category._id.toHexString();
+      categoryId = category2._id.toHexString();
       description = new Array(21).join("a");
       numberInStock = 1;
     });
 
     const exec = async () => {
-      const category = await populateCategory("category1");
       const product = await populateProduct("product1", category);
       return request(server)
         .put(`/api/products/${product._id}`)
@@ -278,65 +265,44 @@ describe("/api/products", () => {
         });
     };
 
-    it("should return 401 if client is not logged in", async () => {
-      token = "";
-      const res = await exec();
+    it("should return 401 if client is not logged in", async () =>
+      await test401(exec));
 
-      expect(res.status).toBe(401);
-    });
-
-    it("should return 403 if user is not admin", async () => {
-      token = new User().generateAuthToken();
-      const res = await exec();
-
-      expect(res.status).toBe(403);
-    });
+    it("should return 403 if user is not admin", async () =>
+      await test403(exec));
 
     it("should return 400 if name property of input is less than 2 characters", async () => {
       name = "a";
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if categoryId property of input is not a valid id", async () => {
       categoryId = "1";
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if value of price property of input is less than 3", async () => {
       price = 2;
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if description property of input is less than 20 characters", async () => {
       description = new Array(20).join("a");
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if description property of input is more than 2000 characters", async () => {
       description = new Array(2002).join("a");
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should return 400 if value of numberInStock property of input is negative", async () => {
       numberInStock = -1;
-      const res = await exec();
-
-      expect(res.status).toBe(400);
+      await test400(exec);
     });
 
     it("should update and save the product if input is valid", async () => {
       await exec();
-
       const product = await Product.find({ name: "product2" });
       expect(product).not.toBe(null);
     });
@@ -346,16 +312,14 @@ describe("/api/products", () => {
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("_id");
       expect(res.body).toHaveProperty("insertionDate");
-      expect(res.body).toMatchObject(productObject("product2", category));
+      expect(res.body).toMatchObject(productObject("product2", category2));
     });
   });
 
   describe("DELETE /:id", () => {
-    let token, id;
+    let id;
 
     beforeEach(async () => {
-      token = new User({ isAdmin: true }).generateAuthToken();
-      const category = await populateCategory("category1");
       const product = await populateProduct("product1", category);
       id = product._id;
     });
@@ -366,17 +330,11 @@ describe("/api/products", () => {
         .set("x-auth-token", token);
     };
 
-    it("should return 401 if client is not logged in", async () => {
-      token = "";
-      const res = await exec();
-      expect(res.status).toBe(401);
-    });
+    it("should return 401 if client is not logged in", async () =>
+      await test401(exec));
 
-    it("should return 403 if user is not admin", async () => {
-      token = new User().generateAuthToken();
-      const res = await exec();
-      expect(res.status).toBe(403);
-    });
+    it("should return 403 if user is not admin", async () =>
+      await test403(exec));
 
     it("should return 404 if invalid id is passed", async () => {
       id = "1";
