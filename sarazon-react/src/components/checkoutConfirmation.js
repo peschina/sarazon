@@ -30,10 +30,12 @@ const CheckoutConfirmation = props => {
 
   const handleConfirmOrder = () => {
     console.log("confirm order");
+    console.log(
+      props.location.state.address,
+      props.location.state.paymentMethod
+    );
     // call server and update orders
   };
-
-  console.log(props.location.state.address, props.location.state.paymentMethod);
 
   const productTemplate = ({
     name,

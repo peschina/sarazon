@@ -1,27 +1,37 @@
 import React, { useState, useEffect } from "react";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
+import { Message } from "primereact/message";
 import CheckoutSteps from "./checkoutSteps";
 
-const CheckoutAddress = (props) => {
+const CheckoutAddress = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [newAddress, setNewAddress] = useState("");
   const [showNewAddressInputs, setShowNewAddressInputs] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     setAddresses(["address1", "address2", "address3"]);
   }, []);
 
   const footer = (
-    <Link className="p-col-12" to={{
-		pathname: '/checkout-payment',
-		state: {address: selectedAddress}
-	}}>
-      <Button label="Deliver to this address" />
+    <Link
+      className="p-col-12"
+      to={{
+        pathname: selectedAddress ? "/checkout-payment" : "/checkout-address",
+        state: { address: selectedAddress }
+      }}
+    >
+      <Button
+        label="Deliver to this address"
+        onClick={() => {
+          if (!selectedAddress) setError(true);
+        }}
+      />
     </Link>
   );
 
@@ -32,12 +42,14 @@ const CheckoutAddress = (props) => {
   };
 
   const handleShowNewAddressInput = () => setShowNewAddressInputs(true);
-  
+
   const handleCancelNewAddress = () => {
-	setNewAddress('');
-	setShowNewAddressInputs(false);
-  }
-  
+    setNewAddress("");
+    setShowNewAddressInputs(false);
+  };
+
+  const handleSelectAddress = ({ target }) => setSelectedAddress(target.value);
+
   const newAddressInputs = () => {
     const visible = showNewAddressInputs ? "" : "none";
     return (
@@ -71,7 +83,7 @@ const CheckoutAddress = (props) => {
         id={value}
         value={value}
         name="selectedAddress"
-        onChange={e => setSelectedAddress(e.target.value)}
+        onChange={handleSelectAddress}
         checked={selectedAddress === value}
       />
       <label htmlFor={value} className="p-radiobutton-label">
@@ -80,23 +92,27 @@ const CheckoutAddress = (props) => {
     </div>
   );
 
-  
   return (
     <div className="p-grid p-justify-center">
       <div className="p-col-12 p-md-10 p-lg-8">
         <CheckoutSteps />
-          <div className="p-col-12">Select delivery address</div>
-          <Card footer={footer} className="p-col-12">
-            <ul className="p-col-12">
-              {addresses.map(a => renderAddressRadioButton(a))}
-            </ul>
-            <hr></hr>
-            <div className="p-col-12" onClick={handleShowNewAddressInput}>
-              <i className="pi pi-plus"></i>Add new address
-            </div>
-            {newAddressInputs()}
-          </Card>
-
+        <div className="p-col-12">Select delivery address</div>
+        <Card footer={footer} className="p-col-12">
+          {error && (
+            <Message
+              severity="error"
+              text={"Select one address to continue checkout process"}
+            ></Message>
+          )}
+          <ul className="p-col-12">
+            {addresses.map(a => renderAddressRadioButton(a))}
+          </ul>
+          <hr></hr>
+          <div className="p-col-12" onClick={handleShowNewAddressInput}>
+            <i className="pi pi-plus"></i>Add new address
+          </div>
+          {newAddressInputs()}
+        </Card>
       </div>
     </div>
   );

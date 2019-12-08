@@ -1,30 +1,42 @@
 import React, { useState, useEffect } from "react";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
+import { Message } from "primereact/message";
 import CheckoutSteps from "./checkoutSteps";
 
-const CheckoutPayment = (props) => {
+const CheckoutPayment = props => {
   const [showNewPaymentInputs, setShowNewPaymentInputs] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [newPaymentMethod, setNewPaymentMethod] = useState('');
+  const [newPaymentMethod, setNewPaymentMethod] = useState("");
   const [selectedPayment, setSelectedPayment] = useState(null);
-	
-	useEffect(() => {
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
     setPaymentMethods(["Paypal", "Credit card"]);
   }, []);
 
   const footer = (
-    <Link className="p-col-12" to={{
-		pathname: 'checkout-confirmation',
-		state: {
-			address: props.location.state.address,
-			paymentMethod: selectedPayment
-		}
-	}}>
-      <Button label="Choose this payment method" />
+    <Link
+      className="p-col-12"
+      to={{
+        pathname: selectedPayment
+          ? "checkout-confirmation"
+          : "checkout-payment",
+        state: {
+          address: props.location.state.address,
+          paymentMethod: selectedPayment
+        }
+      }}
+    >
+      <Button
+        label="Choose this payment method"
+        onClick={() => {
+          if (!selectedPayment) setError(true);
+        }}
+      />
     </Link>
   );
 
@@ -35,12 +47,11 @@ const CheckoutPayment = (props) => {
   };
 
   const handleShowNewPaymentInput = () => setShowNewPaymentInputs(true);
- 
+
   const handleCancelNewAddress = () => {
-	setNewPaymentMethod('');
-	setShowNewPaymentInputs(false);
-  }
-  
+    setNewPaymentMethod("");
+    setShowNewPaymentInputs(false);
+  };
 
   const newPaymentInputs = () => {
     const visible = showNewPaymentInputs ? "" : "none";
@@ -62,7 +73,7 @@ const CheckoutPayment = (props) => {
             label="Cancel"
             icon="pi pi-times"
             className="p-button-secondary"
-			onClick={handleCancelNewAddress}
+            onClick={handleCancelNewAddress}
           />
         </div>
       </div>
@@ -88,17 +99,23 @@ const CheckoutPayment = (props) => {
     <div className="p-grid p-justify-center">
       <div className="p-col-12 p-md-10 p-lg-8">
         <CheckoutSteps activeIndex={1} />
-          <div className="p-col-12">Choose payment method</div>
-          <Card footer={footer} className="p-col-12">
-            <ul className="p-col-12">
-              {paymentMethods.map(i => renderPaymentRadioButton(i))}
-            </ul>
-            <hr></hr>
-            <div className="p-col-12" onClick={handleShowNewPaymentInput}>
-              <i className="pi pi-plus"></i>Add new payment method
-            </div>
-            {newPaymentInputs()}
-          </Card>
+        <div className="p-col-12">Choose payment method</div>
+        <Card footer={footer} className="p-col-12">
+          {error && (
+            <Message
+              severity="error"
+              text={"Choose a payment method to continue checkout process"}
+            ></Message>
+          )}
+          <ul className="p-col-12">
+            {paymentMethods.map(i => renderPaymentRadioButton(i))}
+          </ul>
+          <hr></hr>
+          <div className="p-col-12" onClick={handleShowNewPaymentInput}>
+            <i className="pi pi-plus"></i>Add new payment method
+          </div>
+          {newPaymentInputs()}
+        </Card>
       </div>
     </div>
   );
