@@ -1,32 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { Growl } from "primereact/growl";
 import CheckoutSteps from "./checkoutSteps";
+import { getCartProducts, updateCart } from "./../services/cartService";
+import { showMessage } from "./../utils";
 
 const CheckoutConfirmation = props => {
   const [products, setProducts] = useState([]);
 
+  const growl = useRef();
+
   useEffect(() => {
-    setProducts([
-      {
-        _id: 1,
-        name: "Black Top",
-        selectedQuantity: 2,
-        price: 30,
-        numberInStock: 3,
-        category: { _id: "123", name: "Women fashion" }
-      },
-      {
-        _id: 2,
-        name: "White shorts",
-        selectedQuantity: 3,
-        price: 45,
-        numberInStock: 2,
-        category: { _id: "123", name: "Women fashion" }
-      }
-    ]);
+    loadProducts();
   }, []);
+
+  const loadProducts = async () => {
+    const { data } = await getCartProducts();
+    setProducts(data);
+  };
 
   const handleConfirmOrder = () => {
     console.log("confirm order");
@@ -35,6 +28,15 @@ const CheckoutConfirmation = props => {
       props.location.state.paymentMethod
     );
     // call server and update orders
+  };
+
+  const handleRemove = async id => {
+    const updatedProducts = products.filter(p => p._id === id);
+    const { status } = await updateCart(updatedProducts);
+    if (status === 200) {
+      showMessage(growl, "success", "Product removed from cart");
+      setProducts(updatedProducts);
+    }
   };
 
   const productTemplate = ({
@@ -53,17 +55,20 @@ const CheckoutConfirmation = props => {
     return (
       <div className="p-col-12" key={_id}>
         <div className="p-grid p-justify-center">
-          <img
-            src={
-              category
-                ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
-                : null
-            }
-            alt={name}
-            className="p-col-4"
-          />
-          <div className="p-grid p-dir-col p-col-6">
-            <div className="p-col bold">{price}</div>
+          <div className="p-col-5">
+            <img
+              src={
+                category
+                  ? `http://localhost:3090/images/products/${category.name}/${name}.jpg`
+                  : null
+              }
+              alt={name}
+              style={{ marginRight: "2em" }}
+            />
+          </div>
+          <div className="p-grid p-col-6">
+            <div className="p-col-12 bold">{name}</div>
+            <div className="p-col-12 bold">€{price}</div>
             <div className="p-col">
               <Dropdown
                 value={selectedQuantity}
@@ -72,11 +77,8 @@ const CheckoutConfirmation = props => {
                 onChange={() => console.log("update cart?")}
               ></Dropdown>
             </div>
-            <div className="p-col">
-              <Button
-                label="Remove"
-                onClick={() => console.log("remove from cart")}
-              ></Button>
+            <div className="p-col-12">
+              <Button label="Remove" onClick={() => handleRemove(_id)}></Button>
             </div>
           </div>
         </div>
@@ -86,12 +88,13 @@ const CheckoutConfirmation = props => {
 
   const totalAmount = () => {
     let amount = 0;
-    products.forEach(p => (amount = amount + parseInt(p.price)));
+    products.forEach(p => (amount = amount + p.price));
     return amount;
   };
 
   return (
     <div className="p-grid p-justify-center">
+      <Growl ref={el => (growl.current = el)} />
       <div className="p-col-12">
         <CheckoutSteps activeIndex={2} />
         <div className="p-grid p-justify-center p-col-12">Order recap</div>

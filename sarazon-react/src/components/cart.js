@@ -66,9 +66,11 @@ const Cart = props => {
       if (p._id === id) p.selectedQuantity = value;
       return p;
     });
-    setProducts(updatedProducts);
     const { status } = await updateCart(updatedProducts);
-    if (status === 200) showMessage(growl, "success", "Cart updated!");
+    if (status === 200) {
+      setProducts(updatedProducts);
+      showMessage(growl, "success", "Cart updated!");
+    }
   };
 
   const handleCheckout = () => {
