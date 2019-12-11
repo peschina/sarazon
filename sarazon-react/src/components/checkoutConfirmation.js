@@ -30,6 +30,18 @@ const CheckoutConfirmation = props => {
     // call server and update orders
   };
 
+  const handleProductQuantity = async (value, id) => {
+    const updatedProducts = products.filter(p => {
+      if (p._id === id) p.selectedQuantity = value;
+      return p;
+    });
+    const { status } = await updateCart(updatedProducts);
+    if (status === 200) {
+      setProducts(updatedProducts);
+      showMessage(growl, "success", "Cart updated!");
+    }
+  };
+
   const handleRemove = async id => {
     const updatedProducts = products.filter(p => p._id === id);
     const { status } = await updateCart(updatedProducts);
@@ -74,7 +86,7 @@ const CheckoutConfirmation = props => {
                 value={selectedQuantity}
                 options={quantities}
                 placeholder={"1"}
-                onChange={() => console.log("update cart?")}
+                onChange={e => handleProductQuantity(e.value, _id)}
               ></Dropdown>
             </div>
             <div className="p-col-12">
