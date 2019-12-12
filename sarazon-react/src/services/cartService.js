@@ -14,5 +14,5 @@ export function updateCart(products) {
       selectedQuantity: p.selectedQuantity
     };
   });
-  return http.put(apiUrl, { products: body });
+  return http.post(apiUrl, { products: body });
 }
