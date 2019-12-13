@@ -31,7 +31,7 @@ describe("auth middleware", () => {
     await product.save();
 
     return await request(server)
-      .put("/api/carts")
+      .post("/api/carts")
       .set("x-auth-token", token)
       .send({
         products: [
