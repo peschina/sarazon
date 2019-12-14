@@ -14,5 +14,5 @@ export function updateWishlist(products) {
     };
   });
 
-  return http.put(apiUrl, { products: body });
+  return http.post(apiUrl, { products: body });
 }
