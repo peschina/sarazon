@@ -7,6 +7,7 @@ let server;
 
 describe("/api/products", () => {
   let category, token;
+  const apiUrl = "/api/products";
   beforeEach(async () => {
     server = require("../../../index");
     category = await populateCategory("category1");
@@ -63,7 +64,7 @@ describe("/api/products", () => {
     it("should return all products", async () => {
       await populateProduct("product1", category);
       await populateProduct("product2", category);
-      const res = await request(server).get("/api/products");
+      const res = await request(server).get(apiUrl);
       expect(res.body.length).toBe(2);
       expect(res.body[0]).toHaveProperty("_id");
       expect(res.body[0]).toHaveProperty("insertionDate");
@@ -75,7 +76,7 @@ describe("/api/products", () => {
 
     it("should return 404 if invalid category id is passed in query params", async () => {
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ categoryId: "1" });
       expect(res.status).toBe(404);
     });
@@ -87,7 +88,7 @@ describe("/api/products", () => {
       await populateProduct("product3", category2);
 
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ categoryId: category._id.toHexString() });
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(2);
@@ -97,7 +98,7 @@ describe("/api/products", () => {
 
     it("should return 400 if valid category id and latest not set to true are passed in query params", async () => {
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ categoryId: category._id.toHexString() })
         .query({ latest: "1" });
       expect(res.status).toBe(400);
@@ -105,7 +106,7 @@ describe("/api/products", () => {
 
     it("should return 400 if only latest is passed in query params", async () => {
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ latest: "1" });
       expect(res.status).toBe(400);
     });
@@ -118,7 +119,7 @@ describe("/api/products", () => {
       await populateProduct("product4", category);
 
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ categoryId: category._id.toHexString() })
         .query({ latest: true });
       expect(res.status).toBe(200);
@@ -127,7 +128,7 @@ describe("/api/products", () => {
 
     it("should return 400 if sponsored not set to true is passed in query params", async () => {
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ sponsored: "1" });
       expect(res.status).toBe(400);
     });
@@ -140,7 +141,7 @@ describe("/api/products", () => {
         })
       );
       const res = await request(server)
-        .get("/api/products")
+        .get(apiUrl)
         .query({ sponsored: true });
       expect(res.body.length).toBe(3);
       expect(res.body[0]).toMatchObject(productObject("product1", category));
@@ -151,14 +152,14 @@ describe("/api/products", () => {
 
   describe("GET /:id", () => {
     it("should return 404 if invalid id is passed", async () => {
-      const res = await request(server).get("/api/products/1");
+      const res = await request(server).get(`${apiUrl}/1`);
       expect(res.status).toBe(404);
     });
 
     it("should return the product if valid id is passed", async () => {
       const product = await populateProduct("product1", category);
 
-      const res = await request(server).get(`/api/products/${product._id}`);
+      const res = await request(server).get(`${apiUrl}/${product._id}`);
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject(productObject("product1", category));
     });
@@ -177,7 +178,7 @@ describe("/api/products", () => {
 
     const exec = async () => {
       return await request(server)
-        .post("/api/products")
+        .post(apiUrl)
         .set("x-auth-token", token)
         .send({
           name,
@@ -254,7 +255,7 @@ describe("/api/products", () => {
     const exec = async () => {
       const product = await populateProduct("product1", category);
       return request(server)
-        .put(`/api/products/${product._id}`)
+        .put(`${apiUrl}/${product._id}`)
         .set("x-auth-token", token)
         .send({
           name,
@@ -326,7 +327,7 @@ describe("/api/products", () => {
 
     const exec = async () => {
       return await request(server)
-        .delete(`/api/products/${id}`)
+        .delete(`${apiUrl}/${id}`)
         .set("x-auth-token", token);
     };
 
