@@ -5,6 +5,7 @@ const { User } = require("../../../models/user");
 let server;
 
 describe("/api/categories", () => {
+  const apiUrl = "/api/categories";
   beforeEach(() => {
     server = require("../../../index");
   });
@@ -24,7 +25,7 @@ describe("/api/categories", () => {
         }
       ]);
 
-      const res = await request(server).get("/api/categories");
+      const res = await request(server).get(apiUrl);
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(2);
       expect(res.body.some(c => c.name === "category1")).toBeTruthy();
@@ -34,14 +35,14 @@ describe("/api/categories", () => {
 
   describe("GET /:id", () => {
     it("should return 404 if invalid id is passed", async () => {
-      const res = await request(server).get("/api/categories/1");
+      const res = await request(server).get(`${apiUrl}/1`);
       expect(res.status).toBe(404);
     });
 
     it("should return category if valid id is passed", async () => {
       const category = new Category({ name: "category1" });
       await category.save();
-      const res = await request(server).get(`/api/categories/${category._id}`);
+      const res = await request(server).get(`${apiUrl}/${category._id}`);
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("name", category.name);
     });
@@ -53,7 +54,7 @@ describe("/api/categories", () => {
 
     const exec = async () => {
       return await request(server)
-        .post("/api/categories")
+        .post(apiUrl)
         .set("x-auth-token", token)
         .send({ name });
     };
