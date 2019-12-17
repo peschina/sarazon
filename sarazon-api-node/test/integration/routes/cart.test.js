@@ -1,4 +1,5 @@
 const request = require("supertest");
+const jwt = require("jsonwebtoken");
 const { Category } = require("../../../models/category");
 const { User } = require("../../../models/user");
 const { Product } = require("../../../models/product");
@@ -6,6 +7,7 @@ const { Product } = require("../../../models/product");
 let server;
 
 describe("/api/carts", () => {
+  const apiUrl = "/api/carts";
   let token, category, product, selectedQuantity, _id;
 
   beforeEach(async () => {
@@ -18,7 +20,8 @@ describe("/api/carts", () => {
       description: new Array(21).join("a"),
       numberInStock: 1
     }).save();
-    (_id = product._id), (selectedQuantity = 1);
+    _id = product._id;
+    selectedQuantity = 1;
     user = new User({
       username: "name1",
       password: "ABC1234!",
@@ -48,14 +51,14 @@ describe("/api/carts", () => {
     it("should return 401 if client is not logged in", async () => {
       token = "";
       const res = await request(server)
-        .get("/api/carts")
+        .get(apiUrl)
         .set("x-auth-token", token);
       expect(res.status).toBe(401);
     });
 
     it("should return the user cart", async () => {
       const res = await request(server)
-        .get("/api/carts")
+        .get(apiUrl)
         .set("x-auth-token", token);
       expect(res.status).toBe(200);
       expect(res.body[0]).toHaveProperty("_id");
@@ -71,7 +74,7 @@ describe("/api/carts", () => {
     describe("POST /", () => {
       const exec = async () => {
         return await request(server)
-          .post("/api/carts")
+          .post(apiUrl)
           .set("x-auth-token", token)
           .send({
             products: [{ _id, selectedQuantity }]
@@ -95,6 +98,23 @@ describe("/api/carts", () => {
         const res = await exec();
         expect(res.status).toBe(400);
       });
+
+      it("should update the user", async () => {
+        await exec();
+        const userId = jwt.decode(token);
+        const user = await User.findById(userId);
+        expect(user.cart).toContainEqual([
+          {
+            _id: product._id.toHexString(),
+            name: "product1",
+            price: 3,
+            numberInStock: 1,
+            selectedQuantity,
+            category: { _id: category._id.toHexString(), name: category.name }
+          }
+        ]);
+      });
+
       it("should update the cart", async () => {
         const res = await exec();
         expect(res.status).toBe(200);
