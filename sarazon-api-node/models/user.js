@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema({
       type: orderSchema,
       required: true
     }
-  ]
+  ],
+  addresses: [String]
 });
 
 userSchema.methods.generateAuthToken = function() {
