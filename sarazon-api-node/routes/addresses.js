@@ -9,7 +9,7 @@ router.get("/", [auth], async (req, res) => {
   const token = req.header("x-auth-token");
   const userId = jwt.decode(token);
   const user = await User.findById(userId);
-  res.send(user.wishlist);
+  res.send(user.addresses);
 });
 
 router.post("/", [auth], async (req, res) => {
@@ -20,10 +20,7 @@ router.post("/", [auth], async (req, res) => {
   const userId = jwt.decode(token);
 
   const { addresses } = req.body;
-  const { n, nModified } = await User.findOneAndUpdate(
-    { _id: userId },
-    { addresses }
-  );
+  const { n, nModified } = await User.updateOne({ _id: userId }, { addresses });
 
   res.send(
     n && nModified
