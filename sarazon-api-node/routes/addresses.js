@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const { User } = require("../models/user");
-const { addressesSchema, validate } = require("../models/address");
+const { validate } = require("../models/address");
 
 router.get("/", [auth], async (req, res) => {
   const token = req.header("x-auth-token");
