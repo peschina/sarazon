@@ -6,6 +6,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
 import { Message } from "primereact/message";
 import CheckoutSteps from "./checkoutSteps";
+import { getAddresses, addAddress } from "./../services/checkoutService";
 
 const CheckoutAddress = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -15,7 +16,11 @@ const CheckoutAddress = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    setAddresses(["address1", "address2", "address3"]);
+    const loadAddresses = async () => {
+      const { data } = await getAddresses();
+      setAddresses(data);
+    };
+    loadAddresses();
   }, []);
 
   const footer = (
@@ -35,10 +40,12 @@ const CheckoutAddress = () => {
     </Link>
   );
 
-  const handleAddNewAddress = () => {
-    // call server to add new address
+  const handleAddNewAddress = async () => {
     const allAddresses = [...addresses, newAddress];
-    setAddresses(allAddresses);
+    const { status } = await addAddress(allAddresses);
+    if (status === 200) {
+      setAddresses(allAddresses);
+    }
   };
 
   const handleShowNewAddressInput = () => setShowNewAddressInputs(true);
