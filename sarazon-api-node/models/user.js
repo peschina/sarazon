@@ -75,10 +75,20 @@ const joiUserSchema = Joi.object({
   password: Joi.string().required()
 });
 
+const usernameSchema = Joi.object({
+  username: Joi.string()
+    .min(4)
+    .max(50)
+    .required()
+});
+
+const validateUsername = obj => usernameSchema.validate(obj);
+
 const validatePassword = pw => new PasswordComplexity().validate(pw);
 const validateUser = user => joiUserSchema.validate(user);
 
 exports.User = User;
 exports.validateUser = validateUser;
+exports.validateUsername = validateUsername;
 exports.validatePassword = validatePassword;
 exports.userSchema = userSchema;
