@@ -176,25 +176,34 @@ const Cart = props => {
       <Growl ref={el => (growl.current = el)} />
       <div className="p-grid p-justify-center p-col-12 p-md-8 p-lg-7">
         <Card
-          footer={footer}
+          footer={products.length === 0 ? null : footer}
           className="p-col-12"
           style={{ boxShadow: "unset" }}
         >
-          <div className="p-grid p-col-12" style={{ padding: "2em" }}>
-            <div
-              className="p-col-11 bold"
-              style={{
-                textAlign: "left",
-                fontSize: "20px"
-              }}
-            >
-              {"Cart"}
+          {products.length === 0 ? (
+            <div>
+              Your Shopping Cart is empty. Continue shopping{" "}
+              <Link to={"/products"}>here</Link>
             </div>
-            <div className="p-col-1" style={{ textAlign: "right" }}>
-              {"Price"}
+          ) : (
+            <div>
+              <div className="p-grid p-col-12" style={{ padding: "2em" }}>
+                <div
+                  className="p-col-11 bold"
+                  style={{
+                    textAlign: "left",
+                    fontSize: "20px"
+                  }}
+                >
+                  {"Cart"}
+                </div>
+                <div className="p-col-1" style={{ textAlign: "right" }}>
+                  {"Price"}
+                </div>
+              </div>
+              {products.map(p => itemTemplate(p))}
             </div>
-          </div>
-          {products.map(p => itemTemplate(p))}
+          )}
         </Card>
       </div>
       <div className="p-grid p-justify-center p-col-12 p-md-4 p-lg-3">
