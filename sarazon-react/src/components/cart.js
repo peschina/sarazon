@@ -215,6 +215,7 @@ const Cart = props => {
             </div>
             <div className="p-col-12">
               <Button
+                disabled={products.length === 0}
                 label="Proceed to checkout"
                 onClick={handleCheckout}
               ></Button>
