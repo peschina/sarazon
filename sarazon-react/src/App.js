@@ -32,9 +32,17 @@ const App = () => {
           <ProtectedRoute path="/profile" component={Profile} />
           <ProtectedRoute path="/orders" component={Orders} />
           <ProtectedRoute path="/wishlist" component={Wishlist} />
-          <Route path="/checkout-address" exact component={CheckoutAddress} />
-          <Route path="/checkout-payment" exact component={CheckoutPayment} />
-          <Route
+          <ProtectedRoute
+            path="/checkout-address"
+            exact
+            component={CheckoutAddress}
+          />
+          <ProtectedRoute
+            path="/checkout-payment"
+            exact
+            component={CheckoutPayment}
+          />
+          <ProtectedRoute
             path="/checkout-confirmation"
             exact
             component={CheckoutConfirmation}
