@@ -181,8 +181,8 @@ const Cart = props => {
           style={{ boxShadow: "unset" }}
         >
           {products.length === 0 ? (
-            <div>
-              Your Shopping Cart is empty. Continue shopping{" "}
+            <div className="textCenter" style={{ fontSize: "20px" }}>
+              Your Shopping Cart is empty. <br></br>Continue shopping{" "}
               <Link to={"/products"}>here</Link>
             </div>
           ) : (

@@ -94,14 +94,20 @@ const Wishlist = () => {
     <div className="p-grid p-justify-center">
       <Growl ref={el => (growl.current = el)} />
       <Card className="p-col-12 p-md-10 p-lg-8" style={{ boxShadow: "unset" }}>
-        <div className="p-grid p-col-12">
-          <div className="p-col-11 bold" style={{ textAlign: "left" }}>
-            {"Wishlist"}
+        {products.length === 0 ? (
+          <div className="textCenter" style={{ fontSize: "20px" }}>
+            Your wishlist is empty
           </div>
-          <div className="p-col-1" style={{ textAlign: "right" }}>
-            {"Price"}
+        ) : (
+          <div className="p-grid p-col-12">
+            <div className="p-col-11 bold" style={{ textAlign: "left" }}>
+              {"Wishlist"}
+            </div>
+            <div className="p-col-1" style={{ textAlign: "right" }}>
+              {"Price"}
+            </div>
           </div>
-        </div>
+        )}
         {products.map(p => itemTemplate(p))}
       </Card>
     </div>
