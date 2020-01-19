@@ -80,12 +80,14 @@ const Profile = () => {
           <div className="p-col bold">{label}:</div>
           <div className="p-col">{value}</div>
         </div>
-        <div className="p-col-3">
-          <Button
-            label="Edit"
-            onClick={() => handleToggleDialog(label.toLowerCase())}
-          ></Button>
-        </div>
+        {label !== "Email" && (
+          <div className="p-col-3">
+            <Button
+              label="Edit"
+              onClick={() => handleToggleDialog(label.toLowerCase())}
+            ></Button>
+          </div>
+        )}
       </div>
     </Card>
   );
@@ -108,7 +110,7 @@ const Profile = () => {
         <label className="bold">{`New ${label}`}</label>
       </div>
       <div className="p-col">
-        {label !== "password" ? (
+        {label === "username" ? (
           <InputText value={input} onChange={e => setInput(e.target.value)} />
         ) : (
           <Password value={input} onChange={e => setInput(e.target.value)} />
@@ -117,30 +119,19 @@ const Profile = () => {
           <Message severity="error" text={errors[label]}></Message>
         )}
       </div>
-      {label !== "username" && (
+      {label === "password" && (
         <>
           <div className="p-col">
             <label className="bold">{`Confirm ${label}`}</label>
           </div>
           <div className="p-col">
-            {label === "email" ? (
-              <InputText
-                value={c_input}
-                onChange={e => setC_Input(e.target.value)}
-              />
-            ) : (
-              <Password
-                value={c_input}
-                onChange={e => setC_Input(e.target.value)}
-              />
+            <Password
+              value={c_input}
+              onChange={e => setC_Input(e.target.value)}
+            />
+            {errors.c_password && (
+              <Message severity="error" text={errors.c_password}></Message>
             )}
-            {label === "email"
-              ? errors.c_email && (
-                  <Message severity="error" text={errors.c_email}></Message>
-                )
-              : errors.c_password && (
-                  <Message severity="error" text={errors.c_password}></Message>
-                )}
           </div>
         </>
       )}
@@ -154,12 +145,11 @@ const Profile = () => {
     <div className="p-grid p-justify-center">
       <Growl ref={el => (growl.current = el)} />
       <div className="p-col-12 p-md-6 p-lg-4">
-        {renderCard("Username", user.username)}
         {renderCard("Email", user.email)}
+        {renderCard("Username", user.username)}
         {renderCard("Password", user.password)}
       </div>
       {renderDialog("username")}
-      {renderDialog("email")}
       {renderDialog("password")}
     </div>
   );
