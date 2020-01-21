@@ -8,19 +8,18 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import { validateInput } from "../validation/profileForm";
 import { showMessage } from "./../utils";
+import { getUser } from "../services/userService";
 
 const Profile = () => {
   const [user, setUser] = useState({
-    username: "Sara",
-    email: "example@gmail.com",
-    phone: "3881775564",
-    password: "********"
+    // username: "Sara",
+    // email: "example@gmail.com",
+    // password: "********"
   });
   const [input, setInput] = useState("");
   const [c_input, setC_Input] = useState("");
   const [dialog, setDialog] = useState({
     username: false,
-    email: false,
     password: false
   });
   const [errors, setErrors] = useState({});
@@ -29,6 +28,20 @@ const Profile = () => {
   const errorsRef = useRef(errors);
   const userRef = useRef(user);
   const dialogRef = useRef(dialog);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const { data } = await getUser();
+      const { username, email } = data;
+      const user = {
+        username,
+        email,
+        password: "********"
+      };
+      setUser(user);
+    };
+    getProfile();
+  }, []);
 
   useEffect(() => {
     errorsRef.current = errors;
@@ -51,8 +64,6 @@ const Profile = () => {
   const handleSave = value => {
     setErrors({});
     let error = validateInput(value, input, errorsRef, setErrors, input);
-    if (value === "email")
-      error = validateInput("c_email", c_input, errorsRef, setErrors, input);
     if (value === "password")
       error = validateInput("c_password", c_input, errorsRef, setErrors, input);
     if (error) return;
