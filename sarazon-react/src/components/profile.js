@@ -8,6 +8,7 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import { validateInput } from "../validation/profileForm";
 import { showMessage } from "./../utils";
+import { updateUsername } from "../services/profileService";
 import { getUser } from "../services/userService";
 
 const Profile = () => {
@@ -61,7 +62,7 @@ const Profile = () => {
     setC_Input("");
   }, [dialog]);
 
-  const handleSave = value => {
+  const handleSave = async value => {
     setErrors({});
     let error = validateInput(value, input, errorsRef, setErrors, input);
     if (value === "password")
@@ -72,8 +73,9 @@ const Profile = () => {
     user[value] = input;
     setUser(user);
     // save changes in db
-    // if put is successful display alert
-    showMessage(growl, "success", `${value} updated successfully`);
+    const { status } = await updateUsername(input);
+    if (status === 200)
+      showMessage(growl, "success", `${value} updated successfully`);
     handleToggleDialog(value);
   };
 
