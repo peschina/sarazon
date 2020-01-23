@@ -12,10 +12,6 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  billingAddress: {
-    type: String,
-    required: true
-  },
   totalAmount: {
     type: Number,
     required: true
@@ -26,8 +22,7 @@ const joiOrderSchema = Joi.object({
   products: Joi.array()
     .items(Joi.objectId().required())
     .required(),
-  deliveryAddress: Joi.string().required(),
-  billingAddress: Joi.string().required()
+  deliveryAddress: Joi.string().required()
 });
 
 const validateOrder = order => joiOrderSchema.validate(order);
