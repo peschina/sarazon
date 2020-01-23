@@ -12,11 +12,7 @@ import { updateUsername } from "../services/profileService";
 import { getUser } from "../services/userService";
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    // username: "Sara",
-    // email: "example@gmail.com",
-    // password: "********"
-  });
+  const [user, setUser] = useState({});
   const [input, setInput] = useState("");
   const [c_input, setC_Input] = useState("");
   const [dialog, setDialog] = useState({
@@ -72,7 +68,6 @@ const Profile = () => {
     let user = { ...userRef.current };
     user[value] = input;
     setUser(user);
-    // save changes in db
     const { status } = await updateUsername(input);
     if (status === 200)
       showMessage(growl, "success", `${value} updated successfully`);
@@ -83,7 +78,6 @@ const Profile = () => {
     let dialog = { ...dialogRef.current };
     dialog[value] = !dialog[value];
     setDialog(dialog);
-    // save changes in db
   };
 
   const renderCard = (label, value) => (
