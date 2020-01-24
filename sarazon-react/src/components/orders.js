@@ -1,30 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
+import { Growl } from "primereact/growl";
 import { Button } from "primereact/button";
-import { orders as allOrders } from "../fakeProductService";
-//import { getOrders } from "./../services/orderService";
+import { getOrders } from "./../services/orderService";
+import { getCartProducts, updateCart } from "./../services/cartService";
+import { showMessage } from "./../utils";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
+  const growl = useRef();
+
   useEffect(() => {
-    //const loadData = async () => {
-    //  const { data } = await getOrders();
-    //  setOrders(data);
-    //};
-    //loadData();
-    setOrders(allOrders);
+    const loadData = async () => {
+      const { data } = await getOrders();
+      setOrders(data);
+    };
+    loadData();
   }, []);
 
-  const handleAddToCart = () => console.log("add to cart");
+  const handleAddToCart = async _id => {
+    const { data: cartProducts } = await getCartProducts();
+    const updatedCart = [...cartProducts, { _id, selectedQuantity: 1 }];
+    const { status } = await updateCart(updatedCart);
+    if (status === 200) showMessage(growl, "success", "Product added to cart!");
+  };
 
-  const productTemplate = ({ _id, name, image, price }) => (
+  const productTemplate = ({ _id, name, category, price }) => (
     <Card className="p-col-12" style={{ boxShadow: "unset" }} key={_id}>
       <div className="p-grid p-col-12">
         <Link to={`/product/${_id}`} className="p-col-4 p-md-5 p-lg-5">
-          <img src={image} alt={name} />
+          <img
+            src={`http://localhost:3090/images/products/${category.name}/${name}.jpg`}
+            alt={name}
+          />
         </Link>
         <div className="p-grid p-dir-col p-col">
           <Link to={`/product/${_id}`} className="p-col bold">
@@ -32,7 +43,10 @@ const Orders = () => {
           </Link>
           <div className="p-col">{price}</div>
           <div className="p-col">
-            <Button label="Buy again" onClick={handleAddToCart}></Button>
+            <Button
+              label="Buy again"
+              onClick={() => handleAddToCart(_id)}
+            ></Button>
           </div>
         </div>
       </div>
@@ -44,7 +58,6 @@ const Orders = () => {
     creationDate,
     products,
     deliveryAddress,
-    billingAddress,
     totalAmount
   }) => {
     return (
@@ -85,6 +98,7 @@ const Orders = () => {
 
   return (
     <div className="p-grid p-justify-center">
+      <Growl ref={el => (growl.current = el)} />
       <Card className="p-col-12 p-md-10 p-lg-8" style={{ boxShadow: "unset" }}>
         <div className="p-grid p-col-12">
           <div className="p-col-11 bold" style={{ textAlign: "left" }}>
