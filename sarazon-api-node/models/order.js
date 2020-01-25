@@ -3,10 +3,7 @@ const Joi = require("@hapi/joi");
 const { productSchema } = require("./product");
 
 const orderSchema = new mongoose.Schema({
-  creationDate: {
-    type: Date,
-    default: Date.now()
-  },
+  creationDate: { type: Date, default: new Date().toLocaleDateString() },
   products: [{ type: productSchema, required: true }],
   deliveryAddress: {
     type: String,

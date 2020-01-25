@@ -6,6 +6,7 @@ import { Growl } from "primereact/growl";
 import CheckoutSteps from "./checkoutSteps";
 import { getCartProducts, updateCart } from "./../services/cartService";
 import { showMessage } from "./../utils";
+import { addOrder } from "../services/orderService";
 
 const CheckoutConfirmation = props => {
   const [products, setProducts] = useState([]);
@@ -21,13 +22,14 @@ const CheckoutConfirmation = props => {
     setProducts(data);
   };
 
-  const handleConfirmOrder = () => {
-    console.log("confirm order");
-    console.log(
-      props.location.state.address,
-      props.location.state.paymentMethod
-    );
-    // call server and update orders
+  const handleConfirmOrder = async () => {
+    const productsIds = products.map(p => p._id);
+    const { status } = await addOrder({
+      products: productsIds,
+      deliveryAddress: props.location.state.address
+    });
+    if (status === 200)
+      showMessage(growl, "success", "Your order has been accepted");
   };
 
   const handleProductQuantity = async (value, id) => {

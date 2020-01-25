@@ -22,7 +22,7 @@ router.post("/", [auth], async (req, res) => {
   const userId = jwt.decode(token);
   const user = await User.findById(userId);
 
-  const { products, deliveryAddress, billingAddress } = req.body;
+  const { products, deliveryAddress } = req.body;
   const orderedProducts = await Promise.all(
     products.map(async p => await Product.findById(p))
   );
@@ -39,7 +39,6 @@ router.post("/", [auth], async (req, res) => {
     creationDate: Date.now(),
     products: orderedProducts,
     deliveryAddress: deliveryAddress,
-    billingAddress: billingAddress,
     totalAmount: total
   };
   const orders = [...user.orders, order];
