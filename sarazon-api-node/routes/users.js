@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const { User, validateUser, validatePassword } = require("../models/user");
@@ -31,6 +32,28 @@ router.post("/", async (req, res) => {
     .header("x-auth-token", token)
     .header("access-control-expose-headers", "x-auth-token")
     .send({ _id: user._id, username: username, email: email });
+});
+
+router.post("/change_password", [auth], async (req, res) => {
+  const { password } = req.body;
+  const { error } = validatePassword(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const token = req.header("x-auth-token");
+  const userId = jwt.decode(token);
+
+  const salt = await bcrypt.genSalt(10);
+  const newPassword = await bcrypt.hash(password, salt);
+
+  const { n, nModified } = await User.updateOne(
+    { _id: userId },
+    { password: newPassword }
+  );
+  res.send(
+    n && nModified
+      ? "Update successfull"
+      : { message: "User password was not updated", n, nModified }
+  );
 });
 
 module.exports = router;
