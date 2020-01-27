@@ -8,8 +8,7 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import { validateInput } from "../validation/profileForm";
 import { showMessage } from "./../utils";
-import { updateUsername } from "../services/profileService";
-import { getUser } from "../services/userService";
+import { getUser, updateUsername } from "../services/userService";
 
 const Profile = () => {
   const [user, setUser] = useState({});

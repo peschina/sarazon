@@ -13,3 +13,11 @@ export function register({ username, email, password }) {
     password
   });
 }
+
+export function updateUsername(username) {
+  return http.post(`${apiEndpoint}/change_username`, { username });
+}
+
+export function changePassword(password) {
+  return http.post(`${apiEndpoint}/change_password`, { password });
+}

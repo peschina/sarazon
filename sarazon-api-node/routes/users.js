@@ -34,6 +34,24 @@ router.post("/", async (req, res) => {
     .send({ _id: user._id, username: username, email: email });
 });
 
+router.post("/change_username", [auth], async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) res.status(400).send(error.details[0].message);
+
+  const token = req.header("x-auth-token");
+  const userId = jwt.decode(token);
+
+  const { username } = req.body;
+
+  const { n, nModified } = await User.updateOne({ _id: userId }, { username });
+
+  res.send(
+    n && nModified
+      ? "Update successfull"
+      : { message: "User was not updated", n, nModified }
+  );
+});
+
 router.post("/change_password", [auth], async (req, res) => {
   const { password } = req.body;
   const { error } = validatePassword(req.body);
