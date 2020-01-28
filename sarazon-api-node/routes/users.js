@@ -3,7 +3,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const auth = require("../middleware/auth");
-const { User, validateUser, validatePassword } = require("../models/user");
+const {
+  User,
+  validateUser,
+  validatePassword,
+  validateUsername
+} = require("../models/user");
 
 router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
@@ -35,7 +40,7 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/change_username", [auth], async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateUsername(req.body);
   if (error) res.status(400).send(error.details[0].message);
 
   const token = req.header("x-auth-token");

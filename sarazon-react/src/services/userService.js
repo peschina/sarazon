@@ -14,10 +14,10 @@ export function register({ username, email, password }) {
   });
 }
 
-export function updateUsername(username) {
-  return http.post(`${apiEndpoint}/change_username`, { username });
+export function changeUsername(username) {
+  return http.post(`${apiUrl}/change_username`, { username });
 }
 
 export function changePassword(password) {
-  return http.post(`${apiEndpoint}/change_password`, { password });
+  return http.post(`${apiUrl}/change_password`, { password });
 }
