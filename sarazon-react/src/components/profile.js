@@ -8,7 +8,11 @@ import { Growl } from "primereact/growl";
 import { Message } from "primereact/message";
 import { validateInput } from "../validation/profileForm";
 import { showMessage } from "./../utils";
-import { getUser, updateUsername } from "../services/userService";
+import {
+  getUser,
+  changeUsername,
+  changePassword
+} from "../services/userService";
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -67,7 +71,10 @@ const Profile = () => {
     let user = { ...userRef.current };
     user[value] = input;
     setUser(user);
-    const { status } = await updateUsername(input);
+    const { status } =
+      value === "username"
+        ? await changeUsername(input)
+        : await changePassword(input);
     if (status === 200)
       showMessage(growl, "success", `${value} updated successfully`);
     handleToggleDialog(value);
