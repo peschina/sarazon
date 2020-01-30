@@ -75,8 +75,12 @@ const Profile = () => {
       value === "username"
         ? await changeUsername(input)
         : await changePassword(input);
-    if (status === 200)
+    if (status === 200) {
+      const updatedUser = { ...user };
+      updatedUser.password = "********";
+      setUser(updatedUser);
       showMessage(growl, "success", `${value} updated successfully`);
+    }
     handleToggleDialog(value);
   };
 
